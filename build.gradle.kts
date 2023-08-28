@@ -1,8 +1,9 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import java.util.*
 
-val githubRepo = "jakobkmar/KSpigot"
+val githubRepo = "KitPVP-World/KSpigot"
 
-group = "net.axay"
+group = "world.kitpvp"
 version = "1.20.1"
 
 description = "A Kotlin API for Minecraft plugins using the Spigot or Paper toolchain"
@@ -13,9 +14,7 @@ plugins {
 
     `java-library`
     `maven-publish`
-    signing
-
-    id("org.jetbrains.dokka") version "1.8.20"
+    // signing
 
     id("io.papermc.paperweight.userdev") version "1.5.5"
 }
@@ -27,9 +26,10 @@ repositories {
 dependencies {
     paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.1")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.1")
 }
 
 tasks {
@@ -56,14 +56,15 @@ java {
     withJavadocJar()
 }
 
+/*
 signing {
     sign(publishing.publications)
 }
-
+*/
 publishing {
     repositories {
-        maven("https://oss.sonatype.org/service/local/staging/deploy/maven2") {
-            name = "ossrh"
+        maven("https://maven.ultrabuildmc.de/public-snapshots/") {
+            name = "public-snapshots"
             credentials(PasswordCredentials::class)
         }
     }
@@ -74,7 +75,7 @@ publishing {
             artifact(tasks.jar.get().outputs.files.single())
 
             this.groupId = project.group.toString()
-            this.artifactId = project.name.toLowerCase()
+            this.artifactId = project.name.lowercase(Locale.getDefault())
             this.version = project.version.toString()
 
             pom {
