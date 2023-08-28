@@ -6,7 +6,6 @@ import net.axay.kspigot.annotations.NMS_General
 import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.main.PluginInstance
-import net.axay.kspigot.pluginmessages.PluginMessageConnect
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.title.Title
 import org.bukkit.Location
@@ -177,14 +176,6 @@ fun Player.getHandItem(hand: EquipmentSlot?) = when (hand) {
  */
 fun Player.actionBar(text: String) {
     sendActionBar(literalText { legacyText(text) })
-}
-
-/**
- * Sends the player to the given server in the
- * BungeeCord network.
- */
-fun Player.sendToServer(servername: String) {
-    PluginMessageConnect(servername).sendWithPlayer(this)
 }
 
 /**

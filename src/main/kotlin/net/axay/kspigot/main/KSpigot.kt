@@ -1,8 +1,6 @@
 package net.axay.kspigot.main
 
 import net.axay.kspigot.commands.internal.BrigardierSupport
-import net.axay.kspigot.extensions.bukkit.warn
-import net.axay.kspigot.extensions.console
 import net.axay.kspigot.gui.GUIHolder
 import net.axay.kspigot.languageextensions.kotlinextensions.closeIfInitialized
 import net.axay.kspigot.runnables.KRunnableHolder
@@ -57,7 +55,7 @@ abstract class KSpigot : JavaPlugin() {
 
     final override fun onLoad() {
         if (::PluginInstance.isInitialized) {
-            console.warn("The main instance of KSpigot has been modified, even though it has already been set by another plugin!")
+            slF4JLogger.warn("The main instance of KSpigot has been modified, even though it has already been set by another plugin!")
         }
         PluginInstance = this
         load()

@@ -2,8 +2,8 @@
 
 package net.axay.kspigot.items
 
-import net.axay.kspigot.chat.KColors
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import net.kyori.adventure.text.format.TextDecoration
 
@@ -11,7 +11,7 @@ import net.kyori.adventure.text.format.TextDecoration
  * Converts this string into a list of components, which
  * can be used for minecraft lorelists.
  */
-fun String.toLoreList(lineColor: TextColor = KColors.WHITE, vararg lineDecorations: TextDecoration = arrayOf(), lineLength: Int = 40): List<Component> {
+fun String.toLoreList(lineColor: TextColor = NamedTextColor.WHITE, vararg lineDecorations: TextDecoration = arrayOf(), lineLength: Int = 40): List<Component> {
     val loreList = ArrayList<Component>()
     val lineBuilder = StringBuilder()
     fun submitLine() {
