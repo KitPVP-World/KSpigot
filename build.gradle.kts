@@ -71,8 +71,11 @@ signing {
 publishing {
     repositories {
         maven("https://maven.ultrabuildmc.de/public-snapshots/") {
-            name = "public-snapshots"
-            credentials(PasswordCredentials::class)
+            name = "ultrabuild-public-snapshots"
+            credentials {
+                username = System.getenv("MVNREPO_UB_USERNAME")
+                password = System.getenv("MVNREPO_UB_PASSWORD")
+            }
         }
     }
 
