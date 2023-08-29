@@ -10,12 +10,16 @@ Inventory GUI API, or Brigardier support.
 
 ## Dependency
 
-KSpigot is available on Maven Central.
+KSpigot is available on the ultrabuild repository.
 
 Gradle:
 
 ```kt
-implementation("net.axay:kspigot:$kspigotVersion")
+maven("https://maven.ultrabuildmc.de/public-snapshots/")
+```
+
+```kt
+implementation("world.kitpvp:kspigot:$kspigotVersion")
 ```
 
 Read the [setup guide](https://jakobkmar.github.io/KSpigot/setup/gradle) to get started!
@@ -290,29 +294,6 @@ circle.filledStructure
 circle.edgeStructure
 ```
 
-### IP Address API
-
-This API allows you to easily get some data from the IP address of a player. Please note that it is not promised that
-this always returns data: _After exceeding a certain amount of request per minute, the request will return null._
-
-```kotlin
-player.ipAddressData
-// or (for results in another language)
-player.ipAddressData(IPAddressDataLanguage.GERMAN)
-```
-
-What kind of data is available?
-
-```kotlin
-ipData ?: return
-
-ipData.district
-ipData.city
-ipData.continent
-ipData.country
-// and more...
-```
-
 ### Particles
 
 This part of the API makes it more intuitive to deal with particles.
@@ -337,34 +318,3 @@ You can also access the builder as follows (and instantly spawn the particle).
 loc.particle(Particle.HEART) { }
 player.particle(Particle.HEART) { }
 ```
-
-### GamePhase API
-
-Game phases are commonly used with minigames. This is why KSpigot provides a general way to create such a game phase
-system quickly.
-
-```kotlin
-val game = buildGame {
-    phase(length) {
-        counterMessage("The game will start in", "seconds", "second", ">>", ".")
-
-        end {
-            broadcast("The game has started.")
-        }
-    }
-
-    phase(length) {
-        // alternative counterMessage implementation
-        counterMessage {
-            ">> The special event will start in $it seconds."
-        }
-
-        start { /* do something in the beginning of the gamephase */ }
-        end { /* e.g. start the event */ }
-    }
-}
-
-game.begin()
-```
-
-Idle phases are still in development.

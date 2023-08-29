@@ -2,6 +2,9 @@ package net.axay.kotlinlanguage;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+/**
+ * Only for paper
+ */
 public class KotlinLanguagePlugin extends JavaPlugin {
 
     @Override
