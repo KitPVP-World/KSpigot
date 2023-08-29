@@ -20,7 +20,7 @@ public class KotlinLanguageLoader implements PluginLoader {
         kotlinx("coroutines-jdk8", "1.7.1", resolver);
         kotlinx("coroutines-core-jvm", "1.7.1", resolver);
         kotlin("stdlib-jdk8", "1.8.22", resolver);
-        resolver.addRepository(new RemoteRepository.Builder("mavencentral", "default", "https://").build());
+        resolver.addRepository(new RemoteRepository.Builder("mavencentral", "default", "https://repo.maven.apache.org/maven2/").build());
 
         classpathBuilder.addLibrary(resolver);
     }
