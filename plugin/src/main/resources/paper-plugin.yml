@@ -1,4 +1,4 @@
-name: PaperKotlinLanguage
+name: kotlin-language
 version: 1.0.0
 main: net.axay.kotlinlanguage.KotlinLanguagePlugin
 description: Kotlin language extension for paper
