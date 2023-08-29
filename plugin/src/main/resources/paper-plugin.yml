@@ -1,9 +1,7 @@
 name: kotlin-language
 version: 1.0.0
-main: net.axay.kotlinlanguage.KotlinLanguagePlugin
+main: world.kitpvp.kotlinlanguage.KotlinLanguagePlugin
 description: Kotlin language extension for paper
 api-version: '1.20'
 load: STARTUP
-loader: net.axay.kotlinlanguage.KotlinLanguageLoader
-has-open-classloader: true
 website: https://github.com/KitPVP-World/KSpigot/
