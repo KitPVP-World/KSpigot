@@ -40,8 +40,14 @@ jobs:
       - name: Build
         run: ./gradlew build --stacktrace
 
-      - name: Upload Jars
+      - name: Upload KSpigot
         uses: actions/upload-artifact@v3
         with:
           name: kspigot
-          path: build/libs/paper-paperclip-*-reobf.jar
+          path: build/libs/KSpigot-*.jar
+      - name: Upload Kotlin Language
+        uses: actions/upload-artifact@v3
+        with:
+          name: plugin
+          path: plugin/build/libs/kotlin-language-*.jar
+

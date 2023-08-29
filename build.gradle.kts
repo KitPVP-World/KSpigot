@@ -39,8 +39,6 @@ allprojects {
     }
 
     java {
-        withSourcesJar()
-        withJavadocJar()
         toolchain.languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
@@ -58,6 +56,11 @@ tasks {
     assemble {
         dependsOn(reobfJar)
     }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
 }
 
 /*
