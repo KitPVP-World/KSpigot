@@ -1,7 +1,10 @@
-name: kotlin-language
-version: 1.0.0
-main: world.kitpvp.kotlinlanguage.KotlinLanguagePlugin
-description: Kotlin language extension for paper
-api-version: '1.20'
-load: POSTWORLD
+name: $name
+version: $version
+main: net.axay.plugin.KSpigotPlugin
+description: $description
+api-version: "$apiVersion"
+authors:
+  - jakobkmar
+contributors:
+  - NotStevy
 website: https://github.com/KitPVP-World/KSpigot/
