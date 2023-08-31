@@ -45,9 +45,4 @@ jobs:
         with:
           name: kspigot
           path: build/libs/KSpigot-*.jar
-      - name: Upload Kotlin Language
-        uses: actions/upload-artifact@v3
-        with:
-          name: plugin
-          path: plugin/build/libs/kotlin-language-*.jar
 

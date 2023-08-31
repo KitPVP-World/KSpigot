@@ -5,8 +5,9 @@ import net.axay.kspigot.items.meta
 import org.bukkit.inventory.ItemStack
 import org.bukkit.persistence.PersistentDataHolder
 import org.bukkit.persistence.PersistentDataType
+import org.bukkit.plugin.Plugin
 
-private fun markerKey(key: String) = pluginKey("kspigot_marker_$key")
+private fun markerKey(plugin: Plugin, key: String) = pluginKey(plugin, "kspigot_marker_$key")
 
 /**
  * Marks this object with the given [key].
@@ -16,29 +17,30 @@ private fun markerKey(key: String) = pluginKey("kspigot_marker_$key")
  * conflicts with other plugins, therefore even simple
  * keys are safe.
  */
-fun PersistentDataHolder.mark(key: String) {
-    persistentDataContainer[markerKey(key), PersistentDataType.BYTE] = 1.toByte()
+fun PersistentDataHolder.mark(plugin: Plugin, key: String) {
+    persistentDataContainer[markerKey(plugin, key), PersistentDataType.BYTE] = 1.toByte()
 }
 
 /**
  * Removes the given [key] from this objects'
  * markings.
  */
-fun PersistentDataHolder.unmark(key: String) {
-    persistentDataContainer.remove(markerKey(key))
+fun PersistentDataHolder.unmark(plugin: Plugin, key: String) {
+    persistentDataContainer.remove(markerKey(plugin, key))
 }
 
 /**
  * @return True, if the given [key] is among
  * this objects' markings.
  */
-fun PersistentDataHolder.hasMark(key: String) = persistentDataContainer.has(markerKey(key), PersistentDataType.BYTE)
+fun PersistentDataHolder.hasMark(plugin: Plugin, key: String) =
+    persistentDataContainer.has(markerKey(plugin, key), PersistentDataType.BYTE)
 
 /** @see PersistentDataHolder.mark */
-fun ItemStack.mark(key: String) = meta { mark(key) }
+fun ItemStack.mark(plugin: Plugin, key: String) = meta { mark(plugin, key) }
 
 /** @see PersistentDataHolder.unmark */
-fun ItemStack.unmark(key: String) = meta { unmark(key) }
+fun ItemStack.unmark(plugin: Plugin, key: String) = meta { unmark(plugin, key) }
 
 /** @see PersistentDataHolder.hasMark */
 fun ItemStack.hasMark(key: String): Boolean {

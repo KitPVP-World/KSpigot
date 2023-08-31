@@ -2,7 +2,6 @@
 
 package net.axay.kspigot.extensions
 
-import net.axay.kspigot.main.PluginInstance
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import org.bukkit.Bukkit
@@ -10,6 +9,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.World
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 
 /**
  * Shortcut to get all online players.
@@ -58,7 +58,7 @@ val console get() = Bukkit.getConsoleSender()
 /**
  * Shortcut for creating a new [NamespacedKey]
  */
-fun pluginKey(key: String) = NamespacedKey(PluginInstance, key)
+fun pluginKey(plugin: Plugin, key: String) = NamespacedKey(plugin, key)
 
 /**
  * Shortcut to get a collection of all worlds

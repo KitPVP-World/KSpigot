@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
 
@@ -11,56 +12,60 @@ plugins {
     `maven-publish`
     signing
 
+    id("org.jetbrains.dokka") version "1.8.20"
+
+    id("com.github.johnrengelman.shadow") version "8.1.1" // Using shadow because loading libraries doesn't work well
+
     id("io.papermc.paperweight.userdev") version "1.5.5"
 }
 
-allprojects {
-    group = "world.kitpvp"
-    version = "1.20.1+1.8.22"
+group = "world.kitpvp"
+version = "1.20.1+1.8.22-SNAPSHOT"
+description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
 
-    description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
-
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply<JavaPlugin>()
-
-    repositories {
-        mavenCentral()
-    }
-
-    tasks {
-        withType<JavaCompile> {
-            options.encoding = "UTF-8"
-            options.release.set(17)
-        }
-
-        withType<KotlinCompile> {
-            kotlinOptions.jvmTarget = "17"
-        }
-    }
-
-    java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-    }
+repositories {
+    mavenCentral()
 }
+
 
 dependencies {
     paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 
-    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.1")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.1")
 }
 
 tasks {
     assemble {
+        dependsOn(shadowJar)
         dependsOn(reobfJar)
+    }
+
+    named<ShadowJar>("shadowJar") {
+        archiveBaseName.set("kotlin-language")
+        archiveClassifier.set("")
+    }
+
+    withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        options.release.set(17)
+    }
+
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "17"
+    }
+
+    dokkaHtml.configure {
+        outputDirectory.set(projectDir.resolve("docs"))
     }
 }
 
 java {
     withSourcesJar()
     withJavadocJar()
+
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 /*

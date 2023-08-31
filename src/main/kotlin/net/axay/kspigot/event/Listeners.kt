@@ -1,11 +1,12 @@
 package net.axay.kspigot.event
 
 import net.axay.kspigot.extensions.pluginManager
-import net.axay.kspigot.main.PluginInstance
+import net.axay.kspigot.main.KSpigot
 import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
+import org.bukkit.plugin.Plugin
 
 /**
  * Shortcut for unregistering all events in this listener.
@@ -21,11 +22,12 @@ fun Listener.unregister() = HandlerList.unregisterAll(this)
  * @param executor handles incoming events
  */
 inline fun <reified T : Event> Listener.register(
+    plugin: KSpigot,
     priority: EventPriority = EventPriority.NORMAL,
     ignoreCancelled: Boolean = false,
     noinline executor: (Listener, Event) -> Unit,
 ) {
-    pluginManager.registerEvent(T::class.java, this, priority, executor, PluginInstance, ignoreCancelled)
+    pluginManager.registerEvent(T::class.java, this, priority, executor, plugin, ignoreCancelled)
 }
 
 /**
@@ -42,17 +44,14 @@ abstract class SingleListener<T : Event>(
 /**
  * Registers the [SingleListener] with its
  * event listener.
- *
- * @param priority the priority when multiple listeners handle this event
- * @param ignoreCancelled if manual cancellation should be ignored
  */
-inline fun <reified T : Event> SingleListener<T>.register() {
+inline fun <reified T : Event> SingleListener<T>.register(plugin: Plugin) {
     pluginManager.registerEvent(
         T::class.java,
         this,
         priority,
         { _, event -> (event as? T)?.let { this.onEvent(it) } },
-        PluginInstance,
+        plugin,
         ignoreCancelled
     )
 }
@@ -65,6 +64,7 @@ inline fun <reified T : Event> SingleListener<T>.register() {
  * @param onEvent the event callback
  */
 inline fun <reified T : Event> listen(
+    plugin: Plugin,
     priority: EventPriority = EventPriority.NORMAL,
     ignoreCancelled: Boolean = false,
     register: Boolean = true,
@@ -73,6 +73,6 @@ inline fun <reified T : Event> listen(
     val listener = object : SingleListener<T>(priority, ignoreCancelled) {
         override fun onEvent(event: T) = onEvent.invoke(event)
     }
-    if (register) listener.register()
+    if (register) listener.register(plugin)
     return listener
 }

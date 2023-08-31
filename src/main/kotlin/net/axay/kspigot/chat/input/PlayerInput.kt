@@ -2,10 +2,9 @@
 
 package net.axay.kspigot.chat.input
 
-import net.axay.kspigot.chat.input.implementations.PlayerInputBookComprehensive
-import net.axay.kspigot.chat.input.implementations.PlayerInputBookPaged
 import net.axay.kspigot.chat.input.implementations.PlayerInputChat
 import net.axay.kspigot.event.unregister
+import net.axay.kspigot.main.KSpigot
 import net.axay.kspigot.runnables.sync
 import net.axay.kspigot.runnables.taskRunLater
 import net.kyori.adventure.text.Component
@@ -18,11 +17,12 @@ import org.bukkit.event.Listener
  * chat input of the player as his input.
  */
 fun Player.awaitChatInput(
+    plugin: KSpigot,
     question: Component = text("Type your input in the chat!"),
     timeoutSeconds: Int = 1 * 60,
     callback: (PlayerInputResult<Component>) -> Unit,
 ) {
-    PlayerInputChat(this, callback, timeoutSeconds, question)
+    PlayerInputChat(plugin, this, callback, timeoutSeconds, question)
 }
 
 /**
@@ -30,33 +30,13 @@ fun Player.awaitChatInput(
  * chat input of the player as his input.
  */
 fun Player.awaitChatInput(
+    plugin: KSpigot,
     question: String = "Type your input in the chat!",
     timeoutSeconds: Int = 1 * 60,
     callback: (PlayerInputResult<Component>) -> Unit,
 ) {
-    awaitChatInput(text(question), timeoutSeconds, callback)
+    awaitChatInput(plugin, text(question), timeoutSeconds, callback)
 }
-
-/**
- * Opens a book and uses the text the player inserted
- * on all sites as the players' input.
- * In this case, all pages will be flattened to a single string.
- */
-fun Player.awaitBookInputAsString(
-    timeoutSeconds: Int = 1 * 60,
-    callback: (PlayerInputResult<String>) -> Unit,
-) = PlayerInputBookComprehensive(this, callback, timeoutSeconds).bookItemStack
-
-/**
- * Opens a book and uses the text the player inserted
- * on all sites as the players' input.
- * In this case, every page is represented by one string
- * element in a list of strings.
- */
-fun Player.awaitBookInputAsList(
-    timeoutSeconds: Int = 1 * 60,
-    callback: (PlayerInputResult<List<Component>>) -> Unit,
-) = PlayerInputBookPaged(this, callback, timeoutSeconds).bookItemStack
 
 /**
  * @param input The input the player gave. Null on timeout or invalid input.
@@ -64,6 +44,7 @@ fun Player.awaitBookInputAsList(
 class PlayerInputResult<T> internal constructor(val input: T?)
 
 internal abstract class PlayerInput<T>(
+    protected val plugin: KSpigot,
     protected val player: Player,
     private val callback: (PlayerInputResult<T>) -> Unit,
     timeoutSeconds: Int,
@@ -76,7 +57,7 @@ internal abstract class PlayerInput<T>(
         if (!received) {
             inputListeners.forEach { it.unregister() }
             received = true
-            sync {
+            sync(plugin) {
                 callback.invoke(PlayerInputResult(input))
             }
         }
@@ -85,7 +66,7 @@ internal abstract class PlayerInput<T>(
     open fun onTimeout() {}
 
     init {
-        taskRunLater(delay = (20 * timeoutSeconds).toLong()) {
+        taskRunLater(plugin, delay = (20 * timeoutSeconds).toLong()) {
             if (!received) onTimeout()
             onReceive(null)
         }

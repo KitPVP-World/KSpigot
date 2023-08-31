@@ -2,7 +2,7 @@
 
 package net.axay.kspigot.runnables
 
-import net.axay.kspigot.main.PluginInstance
+import net.axay.kspigot.main.KSpigot
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -47,6 +47,7 @@ abstract class KSpigotRunnable(
  * @return the [KSpigotRunnable]
  */
 fun task(
+    plugin: KSpigot,
     sync: Boolean = true,
     delay: Long = 0,
     period: Long? = null,
@@ -77,21 +78,21 @@ fun task(
 
             if (isCancelled) {
                 if (safe || ranOut)
-                    PluginInstance.kRunnableHolder.activate(this)
+                    plugin.kRunnableHolder.activate(this)
                 else
-                    PluginInstance.kRunnableHolder.remove(this)
+                    plugin.kRunnableHolder.remove(this)
             }
         }
     }
 
-    if (endCallback != null) PluginInstance.kRunnableHolder.add(bukkitRunnable, endCallback, safe)
+    if (endCallback != null) plugin.kRunnableHolder.add(bukkitRunnable, endCallback, safe)
 
     if (period != null)
-        if (sync) bukkitRunnable.runTaskTimer(PluginInstance, delay, period)
-        else bukkitRunnable.runTaskTimerAsynchronously(PluginInstance, delay, period)
+        if (sync) bukkitRunnable.runTaskTimer(plugin, delay, period)
+        else bukkitRunnable.runTaskTimerAsynchronously(plugin, delay, period)
     else
-        if (sync) bukkitRunnable.runTaskLater(PluginInstance, delay)
-        else bukkitRunnable.runTaskLaterAsynchronously(PluginInstance, delay)
+        if (sync) bukkitRunnable.runTaskLater(plugin, delay)
+        else bukkitRunnable.runTaskLaterAsynchronously(plugin, delay)
 
     return bukkitRunnable
 }
@@ -100,31 +101,31 @@ fun task(
  * Executes the given [runnable] with the given [delay].
  * Either sync or async (specified by the [sync] parameter).
  */
-fun taskRunLater(delay: Long, sync: Boolean = true, runnable: () -> Unit) {
+fun taskRunLater(plugin: KSpigot, delay: Long, sync: Boolean = true, runnable: () -> Unit) {
     if (sync)
-        Bukkit.getScheduler().runTaskLater(PluginInstance, runnable, delay)
+        Bukkit.getScheduler().runTaskLater(plugin, runnable, delay)
     else
-        Bukkit.getScheduler().runTaskLaterAsynchronously(PluginInstance, runnable, delay)
+        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay)
 }
 
 /**
  * Executes the given [runnable] either
  * sync or async (specified by the [sync] parameter).
  */
-fun taskRun(sync: Boolean = true, runnable: () -> Unit) {
+fun taskRun(plugin: KSpigot, sync: Boolean = true, runnable: () -> Unit) {
     if (sync) {
-        sync(runnable)
+        sync(plugin, runnable)
     } else {
-        async(runnable)
+        async(plugin, runnable)
     }
 }
 
 /**
  * Starts a synchronous task.
  */
-fun sync(runnable: () -> Unit) = Bukkit.getScheduler().runTask(PluginInstance, runnable)
+fun sync(plugin: KSpigot, runnable: () -> Unit) = Bukkit.getScheduler().runTask(plugin, runnable)
 
 /**
  * Starts an asynchronous task.
  */
-fun async(runnable: () -> Unit) = Bukkit.getScheduler().runTaskAsynchronously(PluginInstance, runnable)
+fun async(plugin: KSpigot, runnable: () -> Unit) = Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable)

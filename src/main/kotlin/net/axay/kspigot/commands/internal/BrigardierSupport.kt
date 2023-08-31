@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.server
-import net.axay.kspigot.main.KSpigotMainInstance
+import net.axay.kspigot.main.KSpigot
 import net.minecraft.commands.CommandSourceStack
 import org.bukkit.event.player.PlayerJoinEvent
 
@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent
  * by using reflection once. Additionally, this class is
  * using some obfuscated functions.
  */
-object BrigardierSupport {
+class BrigardierSupport(val plugin: KSpigot) {
     @PublishedApi
     internal val commands = LinkedHashSet<LiteralArgumentBuilder<CommandSourceStack>>()
 
@@ -23,9 +23,9 @@ object BrigardierSupport {
         private set
 
     init {
-        listen<PlayerJoinEvent> { event ->
+        listen<PlayerJoinEvent>(plugin) { event ->
             val player = event.player
-            val permAttachment = player.addAttachment(KSpigotMainInstance)
+            val permAttachment = player.addAttachment(plugin)
             commands.forEach {
                 permAttachment.setPermission("minecraft.command.${it.literal}", true)
             }

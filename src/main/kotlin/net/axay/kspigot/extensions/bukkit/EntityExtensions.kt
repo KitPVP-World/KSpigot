@@ -5,20 +5,15 @@ package net.axay.kspigot.extensions.bukkit
 import net.axay.kspigot.annotations.NMS_General
 import net.axay.kspigot.chat.literalText
 import net.axay.kspigot.extensions.onlinePlayers
-import net.axay.kspigot.main.PluginInstance
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.title.Title
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.Damageable
-import org.bukkit.entity.Entity
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
+import org.bukkit.entity.*
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
 import java.time.Duration
 
 /**
@@ -106,29 +101,29 @@ fun Player.feedSaturate() {
 /**
  * Hides the player for all [onlinePlayers].
  */
-fun Player.disappear() {
-    onlinePlayers.filter { it != this }.forEach { it.hidePlayer(PluginInstance, this) }
+fun Player.disappear(plugin: Plugin) {
+    onlinePlayers.filter { it != this }.forEach { it.hidePlayer(plugin, this) }
 }
 
 /**
  * Shows the player for all [onlinePlayers].
  */
-fun Player.appear() {
-    onlinePlayers.filter { it != this }.forEach { it.showPlayer(PluginInstance, this) }
+fun Player.appear(plugin: Plugin) {
+    onlinePlayers.filter { it != this }.forEach { it.showPlayer(plugin, this) }
 }
 
 /**
  * Hides all online players from this player.
  */
-fun Player.hideOnlinePlayers() {
-    onlinePlayers.filter { it != this }.forEach { this.hidePlayer(PluginInstance, it) }
+fun Player.hideOnlinePlayers(plugin: Plugin) {
+    onlinePlayers.filter { it != this }.forEach { this.hidePlayer(plugin, it) }
 }
 
 /**
  * Shows all online players to this player.
  */
-fun Player.showOnlinePlayers() {
-    onlinePlayers.filter { it != this }.forEach { this.showPlayer(PluginInstance, it) }
+fun Player.showOnlinePlayers(plugin: Plugin) {
+    onlinePlayers.filter { it != this }.forEach { this.showPlayer(plugin, it) }
 }
 
 /**
