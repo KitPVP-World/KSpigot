@@ -14,7 +14,7 @@ plugins {
 
     id("org.jetbrains.dokka") version "1.8.20"
 
-    id("com.github.johnrengelman.shadow") version "8.1.1" // Using shadow because loading libraries doesn't work well
+    id("com.github.johnrengelman.shadow") version "8.1.1" // Using shadow because "java.lang.LinkageError: loader constraint" violation when multiple plugins depend on kotlin
 
     id("io.papermc.paperweight.userdev") version "1.5.5"
 }
@@ -43,7 +43,6 @@ tasks {
     }
 
     named<ShadowJar>("shadowJar") {
-        archiveBaseName.set("kotlin-language")
         archiveClassifier.set("")
     }
 
