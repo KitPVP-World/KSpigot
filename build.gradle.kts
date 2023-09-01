@@ -5,8 +5,8 @@ import java.util.*
 val githubRepo = "KitPVP-World/KSpigot"
 
 plugins {
-    kotlin("plugin.serialization") version "1.8.22"
-    kotlin("jvm") version "1.8.22"
+    kotlin("plugin.serialization") version "1.9.10"
+    kotlin("jvm") version "1.9.10"
 
     `java-library`
     `maven-publish`
@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "world.kitpvp"
-version = "1.20.1+1.8.22-SNAPSHOT"
+version = "1.20.1+1.9.10"
 description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
 
 repositories {
@@ -31,9 +31,9 @@ repositories {
 dependencies {
     paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.1")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3")
 }
 
 tasks {
