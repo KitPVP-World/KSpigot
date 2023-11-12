@@ -25,6 +25,7 @@ description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
 
 repositories {
     mavenCentral()
+    maven("https://repo.codemc.org/repository/maven-public/")
 }
 
 
@@ -35,6 +36,9 @@ dependencies {
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3")
     api("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
+
+    api("dev.jorel:commandapi-bukkit-shade:9.2.0")
+    api("dev.jorel:commandapi-bukkit-kotlin:9.2.0")
 }
 
 tasks {
