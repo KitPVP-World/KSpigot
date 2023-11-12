@@ -5,22 +5,22 @@ import java.util.*
 val githubRepo = "KitPVP-World/KSpigot"
 
 plugins {
-    kotlin("plugin.serialization") version "1.9.20-Beta"
-    kotlin("jvm") version "1.9.20-Beta"
+    kotlin("plugin.serialization") version "1.9.20"
+    kotlin("jvm") version "1.9.20"
 
     `java-library`
     `maven-publish`
     signing
 
-    id("org.jetbrains.dokka") version "1.9.0"
+    id("org.jetbrains.dokka") version "1.9.10"
 
     id("com.github.johnrengelman.shadow") version "8.1.1" // Using shadow because "java.lang.LinkageError: loader constraint" violation when multiple plugins depend on kotlin
 
-    id("io.papermc.paperweight.userdev") version "1.5.5"
+    id("io.papermc.paperweight.userdev") version "1.5.9"
 }
 
 group = "world.kitpvp"
-version = "1.20.1+1.9.20-Beta"
+version = "1.20.1+1.9.20"
 description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
 
 repositories {
@@ -34,7 +34,7 @@ dependencies {
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3")
-    api("org.jetbrains.kotlin:kotlin-reflect:1.9.20-Beta")
+    api("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
 }
 
 tasks {
