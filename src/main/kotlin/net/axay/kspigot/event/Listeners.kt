@@ -57,22 +57,39 @@ inline fun <reified T : Event> SingleListener<T>.register(plugin: Plugin) {
 }
 
 /**
+ * Registers the listener automatically
  * @param T the type of event to listen to
  * @param priority the priority when multiple listeners handle this event
  * @param ignoreCancelled if manual cancellation should be ignored
- * @param register if the event should be registered immediately
  * @param onEvent the event callback
  */
 inline fun <reified T : Event> listen(
     plugin: Plugin,
     priority: EventPriority = EventPriority.NORMAL,
     ignoreCancelled: Boolean = false,
-    register: Boolean = true,
     crossinline onEvent: (event: T) -> Unit,
 ): SingleListener<T> {
     val listener = object : SingleListener<T>(priority, ignoreCancelled) {
         override fun onEvent(event: T) = onEvent.invoke(event)
     }
-    if (register) listener.register(plugin)
+    listener.register(plugin)
     return listener
+}
+
+/**
+ * Manual registration needed!
+ * @see SingleListener.register(plugin)
+ * @param T the type of event to listen to
+ * @param priority the priority when multiple listeners handle this event
+ * @param ignoreCancelled if manual cancellation should be ignored
+ * @param onEvent the event callback
+ */
+inline fun <reified T: Event> listen(
+    priority: EventPriority = EventPriority.NORMAL,
+    ignoreCancelled: Boolean = false,
+    crossinline onEvent: (event: T) -> Unit,
+): SingleListener<T> {
+    return object: SingleListener<T>(priority, ignoreCancelled) {
+        override fun onEvent(event: T) = onEvent.invoke(event)
+    }
 }
