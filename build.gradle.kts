@@ -94,7 +94,7 @@ signing {
 */
 publishing {
     repositories {
-        maven("https://maven.ultrabuildmc.de/public-snapshots/") {
+        maven("https://maven.kitpvp.world/public-snapshots/") {
             name = "ultrabuild-public-snapshots"
             credentials {
                 username = System.getenv("MVNREPO_UB_USERNAME")

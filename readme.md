@@ -15,7 +15,7 @@ KSpigot is available on the ultrabuild repository.
 Gradle:
 
 ```kt
-maven("https://maven.ultrabuildmc.de/public-snapshots/")
+maven("https://maven.kitpvp.world/public-snapshots/")
 ```
 
 ```kt
