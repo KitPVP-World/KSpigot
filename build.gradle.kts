@@ -5,8 +5,8 @@ import java.util.*
 val githubRepo = "KitPVP-World/KSpigot"
 
 plugins {
-    kotlin("plugin.serialization") version "1.9.20"
-    kotlin("jvm") version "1.9.20"
+    kotlin("plugin.serialization") version "1.9.21"
+    kotlin("jvm") version "1.9.21"
 
     `java-library`
     `maven-publish`
@@ -16,11 +16,11 @@ plugins {
 
     id("com.github.johnrengelman.shadow") version "8.1.1" // Using shadow because "java.lang.LinkageError: loader constraint" violation when multiple plugins depend on kotlin
 
-    id("io.papermc.paperweight.userdev") version "1.5.9"
+    id("io.papermc.paperweight.userdev") version "1.5.10"
 }
 
 group = "world.kitpvp"
-version = "1.20.1+1.9.20"
+version = "1.20.2+1.9.21"
 description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
 
 repositories {
@@ -30,12 +30,12 @@ repositories {
 
 
 dependencies {
-    paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT")
 
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3")
-    api("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
+    api("org.jetbrains.kotlin:kotlin-reflect:1.9.21")
 
     api("dev.jorel:commandapi-bukkit-shade:9.2.0")
     api("dev.jorel:commandapi-bukkit-kotlin:9.2.0")
