@@ -28,28 +28,69 @@ repositories {
     maven("https://repo.codemc.org/repository/maven-public/")
 }
 
+val commandApi by configurations.creating<Configuration> {
+    isCanBeResolved = true
+    isCanBeConsumed = false
+    isVisible = false
+}
+
 
 dependencies {
     paperweight.paperDevBundle("1.20.1-R0.1-SNAPSHOT")
 
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3")
-    api("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
+    shadow("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.20")
+    shadow("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    shadow("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    shadow("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3")
+    shadow("org.jetbrains.kotlin:kotlin-reflect:1.9.20")
 
-    api("dev.jorel:commandapi-bukkit-shade:9.2.0")
-    api("dev.jorel:commandapi-bukkit-kotlin:9.2.0")
+    commandApi("dev.jorel:commandapi-bukkit-shade:9.2.0")
+    commandApi("dev.jorel:commandapi-bukkit-kotlin:9.2.0")
+    implementation("dev.jorel:commandapi-bukkit-shade:9.2.0")
+    implementation("dev.jorel:commandapi-bukkit-kotlin:9.2.0")
+
 }
 
 tasks {
+
+    fun ShadowJar.expandPluginConfiguration(flavor: String) {
+        val props = mapOf(
+            "name" to project.name,
+            "version" to project.version,
+            "description" to project.description,
+            "apiVersion" to "1.20",
+            "flavor" to flavor
+        )
+        inputs.properties(props)
+        filesMatching("paper-plugin.yml") {
+            expand(props)
+        }
+    }
+
+    val commandAPIBundledJar = create<ShadowJar>("shadowJarTwo") {
+        archiveClassifier.set("cmdapi@9.2.0")
+        from(sourceSets["main"].output)
+        configurations = listOf(project.configurations.shadow.get(), commandApi)
+
+        exclude("META-INF/INDEX.LIST", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
+        expandPluginConfiguration(flavor = "KSpigotCommandAPIPlugin")
+    }
+
+
     assemble {
+        dependsOn(commandAPIBundledJar)
         dependsOn(shadowJar)
         dependsOn(reobfJar)
     }
 
     named<ShadowJar>("shadowJar") {
         archiveClassifier.set("")
+
+        configurations = listOf(project.configurations.shadow.get())
+        expandPluginConfiguration(flavor = "KSpigotPlugin")
     }
+
+
 
     withType<JavaCompile> {
         options.encoding = "UTF-8"
@@ -65,16 +106,6 @@ tasks {
     }
     processResources {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
-        val props = mapOf(
-            "name" to project.name,
-            "version" to project.version,
-            "description" to project.description,
-            "apiVersion" to "1.20"
-        )
-        inputs.properties(props)
-        filesMatching("paper-plugin.yml") {
-            expand(props)
-        }
     }
 
 

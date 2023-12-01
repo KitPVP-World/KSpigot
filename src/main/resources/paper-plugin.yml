@@ -1,6 +1,6 @@
 name: $name
 version: $version
-main: net.axay.kspigot.plugin.KSpigotPlugin
+main: net.axay.kspigot.plugin.$flavor
 description: $description
 api-version: "$apiVersion"
 authors:
