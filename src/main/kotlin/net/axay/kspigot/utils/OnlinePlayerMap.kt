@@ -5,14 +5,13 @@ package net.axay.kspigot.utils
 import net.axay.kspigot.event.listen
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerQuitEvent
-import org.bukkit.plugin.Plugin
 import java.util.*
 
-class PlayerMapHolder(plugin: Plugin) {
+class PlayerMapHolder {
     internal val maps = HashSet<OnlinePlayerMap<*>>()
 
     init {
-        listen<PlayerQuitEvent>(plugin) { event ->
+        listen<PlayerQuitEvent> { event ->
             maps.removeIf {
                 if (it.internalMap.remove(event.player.uniqueId) != null) {
                     it.internalMap.isEmpty()

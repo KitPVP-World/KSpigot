@@ -1,8 +1,5 @@
 package net.axay.kspigot.main
 
-import net.axay.kspigot.commands.internal.BrigardierSupport
-import net.axay.kspigot.languageextensions.kotlinextensions.closeIfInitialized
-import net.axay.kspigot.runnables.KRunnableHolder
 import org.bukkit.plugin.java.JavaPlugin
 
 /**
@@ -19,12 +16,6 @@ import org.bukkit.plugin.java.JavaPlugin
  * - [shutdown()] (called in the "end")
  */
 abstract class KSpigot : JavaPlugin() {
-    // lazy properties
-    private val kRunnableHolderProperty = lazy { KRunnableHolder }
-    internal val kRunnableHolder by kRunnableHolderProperty
-
-    private val brigardierSupportProperty = lazy { BrigardierSupport(this) }
-    val brigardierSupport by brigardierSupportProperty
 
     /**
      * Called when the plugin was loaded
@@ -47,16 +38,9 @@ abstract class KSpigot : JavaPlugin() {
 
     final override fun onEnable() {
         startup()
-
-        // only register the commands if the plugin has not disabled itself
-        if (this.isEnabled) {
-            brigardierSupport.registerAll()
-        }
     }
 
     final override fun onDisable() {
         shutdown()
-        // avoid unnecessary load of lazy properties
-        kRunnableHolderProperty.closeIfInitialized()
     }
 }

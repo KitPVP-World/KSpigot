@@ -6,7 +6,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import net.axay.kspigot.event.listen
 import net.axay.kspigot.extensions.onlinePlayers
 import net.axay.kspigot.extensions.server
-import net.axay.kspigot.main.KSpigot
+import net.axay.kspigot.plugin.KSpigotPlugin
 import net.minecraft.commands.CommandSourceStack
 import org.bukkit.event.player.PlayerJoinEvent
 
@@ -15,7 +15,7 @@ import org.bukkit.event.player.PlayerJoinEvent
  * by using reflection once. Additionally, this class is
  * using some obfuscated functions.
  */
-class BrigardierSupport(val plugin: KSpigot) {
+class BrigardierSupport(val plugin: KSpigotPlugin) {
     @PublishedApi
     internal val commands = LinkedHashSet<LiteralArgumentBuilder<CommandSourceStack>>()
 
@@ -23,7 +23,7 @@ class BrigardierSupport(val plugin: KSpigot) {
         private set
 
     init {
-        listen<PlayerJoinEvent>(plugin) { event ->
+        listen<PlayerJoinEvent> { event ->
             val player = event.player
             val permAttachment = player.addAttachment(plugin)
             commands.forEach {
@@ -39,7 +39,7 @@ class BrigardierSupport(val plugin: KSpigot) {
     internal fun registerAll() {
         executedDefaultRegistration = true
 
-        // TODO unregister commands which are now missing due to a possible reload
+        // Should unregister commands which are now missing due to a possible reload
         if (commands.isNotEmpty()) {
             commands.forEach {
                 resolveCommandManager().dispatcher.register(it)

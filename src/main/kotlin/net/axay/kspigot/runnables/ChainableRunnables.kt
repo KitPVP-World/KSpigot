@@ -42,21 +42,20 @@ abstract class ChainedRunnablePart<T, R>(
         exceptionHandler: ((E) -> Unit)?,
     )
 
-    protected fun start(plugin: KSpigot, data: T) {
-        taskRun(plugin, sync) {
+    protected fun start(data: T) {
+        taskRun(sync) {
             val result = invoke(data)
-            next?.start(plugin, result)
+            next?.start(result)
         }
     }
 
     protected fun <E : Exception> startCatching(
-        plugin: KSpigot,
         data: T,
         exceptionClass: KClass<E>,
         exceptionSync: Boolean,
         exceptionHandler: ((E) -> Unit)?,
     ) {
-        taskRun(plugin) {
+        taskRun {
             val result = try {
                 invoke(data)
             } catch (e: Exception) {
@@ -65,30 +64,33 @@ abstract class ChainedRunnablePart<T, R>(
                     if (sync == exceptionSync) {
                         exceptionHandler?.invoke(e as E)
                     } else if (exceptionHandler != null) {
-                        taskRun(plugin, exceptionSync) {
+                        taskRun(exceptionSync) {
                             exceptionHandler.invoke(e as E)
                         }
                     }
                     return@taskRun
                 } else throw e
             }
-            next?.startCatching(plugin, result, exceptionClass, exceptionSync, exceptionHandler)
+            next?.startCatching(result, exceptionClass, exceptionSync, exceptionHandler)
         }
     }
 }
 
 class ChainedRunnablePartFirst<R>(
-    val plugin: KSpigot,
     val runnable: () -> R,
     sync: Boolean,
 ) : ChainedRunnablePart<Unit, R>(sync) {
-    override fun execute() = start(plugin, Unit)
+
+    @Deprecated("Remove the plugin argument", level = DeprecationLevel.ERROR)
+    constructor(@Suppress("UNUSED_PARAMETER") plugin: KSpigot, runnable: () -> R, sync: Boolean): this(runnable, sync)
+
+    override fun execute() = start(Unit)
 
     override fun <E : Exception> executeCatchingImpl(
         exceptionClass: KClass<E>,
         exceptionSync: Boolean,
         exceptionHandler: ((E) -> Unit)?,
-    ) = startCatching(plugin, Unit, exceptionClass, exceptionSync, exceptionHandler)
+    ) = startCatching(Unit, exceptionClass, exceptionSync, exceptionHandler)
 
     override fun invoke(data: Unit) = runnable.invoke()
 }
@@ -110,9 +112,28 @@ class ChainedRunnablePartThen<T, R>(
 }
 
 // FIRST
-fun <R> firstDo(plugin: KSpigot, sync: Boolean, runnable: () -> R) = ChainedRunnablePartFirst(plugin, runnable, sync)
-fun <R> firstSync(plugin: KSpigot, runnable: () -> R) = firstDo(plugin, true, runnable)
-fun <R> firstAsync(plugin: KSpigot, runnable: () -> R) = firstDo(plugin, false, runnable)
+@Deprecated(
+    "Remove the plugin argument", level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("firstDo(sync, runnable)")
+)
+fun <R> firstDo(plugin: KSpigot, sync: Boolean, runnable: () -> R) = firstDo(sync, runnable)
+
+@Deprecated(
+    "Remove the plugin argument", level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("firstSync(runnable)")
+)
+fun <R> firstSync(plugin: KSpigot, runnable: () -> R) = firstSync(runnable)
+
+@Deprecated(
+    "Remove the plugin argument", level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("firstAsync(runnable)")
+)
+fun <R> firstAsync(plugin: KSpigot, runnable: () -> R) = firstAsync(runnable)
+
+// FIRST
+fun <R> firstDo(sync: Boolean, runnable: () -> R) = ChainedRunnablePartFirst(runnable, sync)
+fun <R> firstSync(runnable: () -> R) = firstDo(true, runnable)
+fun <R> firstAsync(runnable: () -> R) = firstDo(false, runnable)
 
 // THEN
 fun <T, R, U> ChainedRunnablePart<T, R>.thenDo(sync: Boolean, runnable: (R) -> U) =

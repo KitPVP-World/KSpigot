@@ -3,7 +3,7 @@ package net.axay.kspigot.commands
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.brigadier.builder.LiteralArgumentBuilder
 import net.axay.kspigot.annotations.NMS_General
-import net.axay.kspigot.main.KSpigot
+import net.axay.kspigot.plugin.KSpigotPluginManager
 import net.minecraft.commands.CommandSourceStack
 
 /**
@@ -14,8 +14,8 @@ import net.minecraft.commands.CommandSourceStack
  * calling this function as the server is starting
  */
 @NMS_General
-fun LiteralArgumentBuilder<CommandSourceStack>.register(plugin: KSpigot, sendToPlayers: Boolean = true) {
-    val brigardierSupport = plugin.brigardierSupport
+fun LiteralArgumentBuilder<CommandSourceStack>.register(sendToPlayers: Boolean = true) {
+    val brigardierSupport = KSpigotPluginManager.brigardierSupport
     if (!brigardierSupport.executedDefaultRegistration)
         brigardierSupport.commands += this
     else {

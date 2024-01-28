@@ -3,6 +3,7 @@
 package net.axay.kspigot.runnables
 
 import net.axay.kspigot.main.KSpigot
+import net.axay.kspigot.plugin.KSpigotPluginManager
 import org.bukkit.Bukkit
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -32,6 +33,21 @@ abstract class KSpigotRunnable(
     var counterDownToZero: Long? = null,
 ) : BukkitRunnable()
 
+@Deprecated(
+    "Remove the plugin argument", level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("task(sync, delay, period, howOften, safe, endCallback, runnable)")
+)
+fun task(
+    plugin: KSpigot,
+    sync: Boolean = true,
+    delay: Long = 0,
+    period: Long? = null,
+    howOften: Long? = null,
+    safe: Boolean = false,
+    endCallback: (() -> Unit)? = null,
+    runnable: ((KSpigotRunnable) -> Unit)? = null,
+): KSpigotRunnable? = task(sync, delay, period, howOften, safe, endCallback, runnable)
+
 /**
  * Starts a new BukkitRunnable.
  *
@@ -47,7 +63,6 @@ abstract class KSpigotRunnable(
  * @return the [KSpigotRunnable]
  */
 fun task(
-    plugin: KSpigot,
     sync: Boolean = true,
     delay: Long = 0,
     period: Long? = null,
@@ -78,54 +93,74 @@ fun task(
 
             if (isCancelled) {
                 if (safe || ranOut)
-                    plugin.kRunnableHolder.activate(this)
+                    KSpigotPluginManager.kRunnableHolder.activate(this)
                 else
-                    plugin.kRunnableHolder.remove(this)
+                    KSpigotPluginManager.kRunnableHolder.remove(this)
             }
         }
     }
 
-    if (endCallback != null) plugin.kRunnableHolder.add(bukkitRunnable, endCallback, safe)
+    if(endCallback != null) KSpigotPluginManager.kRunnableHolder.add(bukkitRunnable, endCallback, safe)
 
     if (period != null)
-        if (sync) bukkitRunnable.runTaskTimer(plugin, delay, period)
-        else bukkitRunnable.runTaskTimerAsynchronously(plugin, delay, period)
+        if(sync) bukkitRunnable.runTaskTimer(KSpigotPluginManager, delay, period)
+        else bukkitRunnable.runTaskTimerAsynchronously(KSpigotPluginManager, delay, period)
     else
-        if (sync) bukkitRunnable.runTaskLater(plugin, delay)
-        else bukkitRunnable.runTaskLaterAsynchronously(plugin, delay)
+        if(sync) bukkitRunnable.runTaskLater(KSpigotPluginManager, delay)
+        else bukkitRunnable.runTaskLaterAsynchronously(KSpigotPluginManager, delay)
 
     return bukkitRunnable
 }
+
+@Deprecated(
+    "Remove the plugin argument", level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("taskRunLater(delay, sync, runnable)")
+)
+fun taskRunLater(plugin: KSpigot, delay: Long, sync: Boolean = true, runnable: () -> Unit) =
+    taskRunLater(delay, sync, runnable)
 
 /**
  * Executes the given [runnable] with the given [delay].
  * Either sync or async (specified by the [sync] parameter).
  */
-fun taskRunLater(plugin: KSpigot, delay: Long, sync: Boolean = true, runnable: () -> Unit) {
+fun taskRunLater(delay: Long, sync: Boolean = true, runnable: () -> Unit) {
     if (sync)
-        Bukkit.getScheduler().runTaskLater(plugin, runnable, delay)
+        Bukkit.getScheduler().runTaskLater(KSpigotPluginManager, runnable, delay)
     else
-        Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay)
+        Bukkit.getScheduler().runTaskLaterAsynchronously(KSpigotPluginManager, runnable, delay)
 }
+
+@Deprecated(
+    message = "Remove the plugin argument", level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("taskRun(sync, runnable)")
+)
+fun taskRun(plugin: KSpigot, sync: Boolean = true, runnable: () -> Unit) = taskRun(sync, runnable)
+
 
 /**
  * Executes the given [runnable] either
  * sync or async (specified by the [sync] parameter).
  */
-fun taskRun(plugin: KSpigot, sync: Boolean = true, runnable: () -> Unit) {
+fun taskRun(sync: Boolean = true, runnable: () -> Unit) {
     if (sync) {
-        sync(plugin, runnable)
+        sync(runnable)
     } else {
-        async(plugin, runnable)
+        async(runnable)
     }
 }
+
+@Deprecated("Remove the plugin argument", level = DeprecationLevel.ERROR, replaceWith = ReplaceWith("sync(runnable)"))
+fun sync(plugin: KSpigot, runnable: () -> Unit) = sync(runnable)
 
 /**
  * Starts a synchronous task.
  */
-fun sync(plugin: KSpigot, runnable: () -> Unit) = Bukkit.getScheduler().runTask(plugin, runnable)
+fun sync(runnable: () -> Unit) = Bukkit.getScheduler().runTask(KSpigotPluginManager, runnable)
+
+@Deprecated("Remove the plugin argument", level = DeprecationLevel.ERROR, replaceWith = ReplaceWith("async(runnable)"))
+fun async(plugin: KSpigot, runnable: () -> Unit) = async(runnable)
 
 /**
  * Starts an asynchronous task.
  */
-fun async(plugin: KSpigot, runnable: () -> Unit) = Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable)
+fun async(runnable: () -> Unit) = Bukkit.getScheduler().runTaskAsynchronously(KSpigotPluginManager, runnable)

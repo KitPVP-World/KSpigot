@@ -12,30 +12,50 @@ import net.kyori.adventure.text.Component.text
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
-/**
- * Asks the player a question and uses the next
- * chat input of the player as his input.
- */
+@Deprecated(
+    "Remove the plugin argument", level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("awaitChatInput(question, timeoutSeconds, callback)")
+)
 fun Player.awaitChatInput(
     plugin: KSpigot,
     question: Component = text("Type your input in the chat!"),
     timeoutSeconds: Int = 1 * 60,
     callback: (PlayerInputResult<Component>) -> Unit,
-) {
-    PlayerInputChat(plugin, this, callback, timeoutSeconds, question)
-}
+) = awaitChatInput(question, timeoutSeconds, callback)
 
 /**
  * Asks the player a question and uses the next
  * chat input of the player as his input.
  */
 fun Player.awaitChatInput(
+    question: Component = text("Type your input in the chat!"),
+    timeoutSeconds: Int = 1 * 60,
+    callback: (PlayerInputResult<Component>) -> Unit,
+) {
+    PlayerInputChat(this, callback, timeoutSeconds, question)
+}
+
+@Deprecated(
+    "Remove the plugin argument", level = DeprecationLevel.ERROR,
+    replaceWith = ReplaceWith("awaitChatInput(question, timeoutSeconds, callback)")
+)
+fun Player.awaitChatInput(
     plugin: KSpigot,
     question: String = "Type your input in the chat!",
     timeoutSeconds: Int = 1 * 60,
     callback: (PlayerInputResult<Component>) -> Unit,
+) = awaitChatInput(question, timeoutSeconds, callback)
+
+/**
+ * Asks the player a question and uses the next
+ * chat input of the player as his input.
+ */
+fun Player.awaitChatInput(
+    question: String = "Type your input in the chat!",
+    timeoutSeconds: Int = 1 * 60,
+    callback: (PlayerInputResult<Component>) -> Unit,
 ) {
-    awaitChatInput(plugin, text(question), timeoutSeconds, callback)
+    awaitChatInput(text(question), timeoutSeconds, callback)
 }
 
 /**
@@ -44,7 +64,6 @@ fun Player.awaitChatInput(
 class PlayerInputResult<T> internal constructor(val input: T?)
 
 internal abstract class PlayerInput<T>(
-    protected val plugin: KSpigot,
     protected val player: Player,
     private val callback: (PlayerInputResult<T>) -> Unit,
     timeoutSeconds: Int,
@@ -57,7 +76,7 @@ internal abstract class PlayerInput<T>(
         if (!received) {
             inputListeners.forEach { it.unregister() }
             received = true
-            sync(plugin) {
+            sync {
                 callback.invoke(PlayerInputResult(input))
             }
         }
@@ -66,7 +85,7 @@ internal abstract class PlayerInput<T>(
     open fun onTimeout() {}
 
     init {
-        taskRunLater(plugin, delay = (20 * timeoutSeconds).toLong()) {
+        taskRunLater(delay = (20 * timeoutSeconds).toLong()) {
             if (!received) onTimeout()
             onReceive(null)
         }
