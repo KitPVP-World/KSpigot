@@ -183,7 +183,7 @@ fun Player.give(vararg itemStacks: ItemStack) = inventory.addItem(*itemStacks)
  * Adds all equipment locks to every equipment slot
  */
 fun ArmorStand.fullLock() {
-    for (slot in EquipmentSlot.values()) {
+    for (slot in EquipmentSlot.entries) {
         lock(slot)
     }
 }
@@ -193,7 +193,7 @@ fun ArmorStand.fullLock() {
  * @param slot the slot which gets locked
  */
 fun ArmorStand.lock(slot: EquipmentSlot) {
-    for (lock in ArmorStand.LockType.values()) {
+    for (lock in ArmorStand.LockType.entries) {
         addEquipmentLock(slot, lock)
     }
 }
