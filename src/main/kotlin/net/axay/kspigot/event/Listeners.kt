@@ -14,10 +14,6 @@ import org.bukkit.plugin.Plugin
  */
 fun Listener.unregister() = HandlerList.unregisterAll(this)
 
-@Deprecated(
-    "Remove the plugin argument", level = DeprecationLevel.ERROR,
-    replaceWith = ReplaceWith("register<T>(priority, ignoreCancelled, executor)")
-)
 inline fun <reified T: Event> Listener.register(
     @Suppress("UNUSED_PARAMETER") plugin: KSpigot,
     priority: EventPriority = EventPriority.NORMAL,
@@ -52,9 +48,6 @@ abstract class SingleListener<T : Event>(
     abstract fun onEvent(event: T)
 }
 
-@Deprecated("Remove the plugin argument", level = DeprecationLevel.ERROR, replaceWith = ReplaceWith("register()"))
-inline fun <reified T: Event> SingleListener<T>.register(@Suppress("UNUSED_PARAMETER") plugin: Plugin) = register()
-
 
 /**
  * Registers the [SingleListener] with its
@@ -70,18 +63,6 @@ inline fun <reified T: Event> SingleListener<T>.register() {
         ignoreCancelled
     )
 }
-
-@Deprecated(
-    "Remove the plugin argument", level = DeprecationLevel.ERROR,
-    replaceWith =
-    ReplaceWith("listen(priority = priority, ignoreCancelled = ignoreCancelled, onEvent = onEvent)"),
-)
-inline fun <reified T : Event> listen(
-    plugin: Plugin,
-    priority: EventPriority = EventPriority.NORMAL,
-    ignoreCancelled: Boolean = false,
-    crossinline onEvent: (event: T) -> Unit,
-): SingleListener<T> = listen(priority = priority, ignoreCancelled = ignoreCancelled, onEvent = onEvent)
 
 /**
  * Registers the listener automatically

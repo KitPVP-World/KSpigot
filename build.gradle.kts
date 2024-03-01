@@ -23,7 +23,7 @@ plugins {
 }
 
 group = "world.kitpvp"
-version = "1.20.2+1.9.22"
+version = "1.20.4+1.9.22"
 description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
 
 repositories {
@@ -33,11 +33,11 @@ repositories {
 
 
 dependencies {
-    paperweight.paperDevBundle("1.20.2-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
 
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2") // https://github.com/Kotlin/kotlinx.serialization/releases/latest
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3") // https://github.com/Kotlin/kotlinx.coroutines/releases/latest
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.7.3")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0") // https://github.com/Kotlin/kotlinx.coroutines/releases/latest
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3") // https://github.com/Kotlin/kotlinx.serialization/releases/latest
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.8.0")
     api("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
 
     api("dev.jorel:commandapi-bukkit-shade:9.3.0") // https://github.com/JorelAli/CommandAPI/releases/latest

@@ -10,6 +10,7 @@ import net.kyori.adventure.title.Title
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftEntity
 import org.bukkit.entity.*
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.inventory.ItemStack
@@ -132,8 +133,8 @@ fun Player.showOnlinePlayers(plugin: Plugin) {
 @Deprecated("This function is unstable and it cannot be guaranteed that it will work at any time in the future.")
 @NMS_General
 fun Location.spawnCleanEntity(entityType: EntityType): Entity? {
-    val craftWorld = world as? org.bukkit.craftbukkit.v1_20_R2.CraftWorld ?: return null
-    return craftWorld.createEntity(this, entityType.entityClass)?.let {
+    val craftWorld = world as? org.bukkit.craftbukkit.v1_20_R3.CraftWorld ?: return null
+    return craftWorld.createEntity(this, entityType.entityClass!!, false)?.let {
         craftWorld.handle.addFreshEntity(it)
         return@let it.bukkitEntity
     }

@@ -12,17 +12,6 @@ import net.kyori.adventure.text.Component.text
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 
-@Deprecated(
-    "Remove the plugin argument", level = DeprecationLevel.ERROR,
-    replaceWith = ReplaceWith("awaitChatInput(question, timeoutSeconds, callback)")
-)
-fun Player.awaitChatInput(
-    plugin: KSpigot,
-    question: Component = text("Type your input in the chat!"),
-    timeoutSeconds: Int = 1 * 60,
-    callback: (PlayerInputResult<Component>) -> Unit,
-) = awaitChatInput(question, timeoutSeconds, callback)
-
 /**
  * Asks the player a question and uses the next
  * chat input of the player as his input.
@@ -34,17 +23,6 @@ fun Player.awaitChatInput(
 ) {
     PlayerInputChat(this, callback, timeoutSeconds, question)
 }
-
-@Deprecated(
-    "Remove the plugin argument", level = DeprecationLevel.ERROR,
-    replaceWith = ReplaceWith("awaitChatInput(question, timeoutSeconds, callback)")
-)
-fun Player.awaitChatInput(
-    plugin: KSpigot,
-    question: String = "Type your input in the chat!",
-    timeoutSeconds: Int = 1 * 60,
-    callback: (PlayerInputResult<Component>) -> Unit,
-) = awaitChatInput(question, timeoutSeconds, callback)
 
 /**
  * Asks the player a question and uses the next

@@ -112,25 +112,6 @@ class ChainedRunnablePartThen<T, R>(
 }
 
 // FIRST
-@Deprecated(
-    "Remove the plugin argument", level = DeprecationLevel.ERROR,
-    replaceWith = ReplaceWith("firstDo(sync, runnable)")
-)
-fun <R> firstDo(plugin: KSpigot, sync: Boolean, runnable: () -> R) = firstDo(sync, runnable)
-
-@Deprecated(
-    "Remove the plugin argument", level = DeprecationLevel.ERROR,
-    replaceWith = ReplaceWith("firstSync(runnable)")
-)
-fun <R> firstSync(plugin: KSpigot, runnable: () -> R) = firstSync(runnable)
-
-@Deprecated(
-    "Remove the plugin argument", level = DeprecationLevel.ERROR,
-    replaceWith = ReplaceWith("firstAsync(runnable)")
-)
-fun <R> firstAsync(plugin: KSpigot, runnable: () -> R) = firstAsync(runnable)
-
-// FIRST
 fun <R> firstDo(sync: Boolean, runnable: () -> R) = ChainedRunnablePartFirst(runnable, sync)
 fun <R> firstSync(runnable: () -> R) = firstDo(true, runnable)
 fun <R> firstAsync(runnable: () -> R) = firstDo(false, runnable)

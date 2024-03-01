@@ -33,21 +33,6 @@ abstract class KSpigotRunnable(
     var counterDownToZero: Long? = null,
 ) : BukkitRunnable()
 
-@Deprecated(
-    "Remove the plugin argument", level = DeprecationLevel.ERROR,
-    replaceWith = ReplaceWith("task(sync, delay, period, howOften, safe, endCallback, runnable)")
-)
-fun task(
-    plugin: KSpigot,
-    sync: Boolean = true,
-    delay: Long = 0,
-    period: Long? = null,
-    howOften: Long? = null,
-    safe: Boolean = false,
-    endCallback: (() -> Unit)? = null,
-    runnable: ((KSpigotRunnable) -> Unit)? = null,
-): KSpigotRunnable? = task(sync, delay, period, howOften, safe, endCallback, runnable)
-
 /**
  * Starts a new BukkitRunnable.
  *
@@ -112,13 +97,6 @@ fun task(
     return bukkitRunnable
 }
 
-@Deprecated(
-    "Remove the plugin argument", level = DeprecationLevel.ERROR,
-    replaceWith = ReplaceWith("taskRunLater(delay, sync, runnable)")
-)
-fun taskRunLater(plugin: KSpigot, delay: Long, sync: Boolean = true, runnable: () -> Unit) =
-    taskRunLater(delay, sync, runnable)
-
 /**
  * Executes the given [runnable] with the given [delay].
  * Either sync or async (specified by the [sync] parameter).
@@ -129,13 +107,6 @@ fun taskRunLater(delay: Long, sync: Boolean = true, runnable: () -> Unit) {
     else
         Bukkit.getScheduler().runTaskLaterAsynchronously(KSpigotPluginManager, runnable, delay)
 }
-
-@Deprecated(
-    message = "Remove the plugin argument", level = DeprecationLevel.ERROR,
-    replaceWith = ReplaceWith("taskRun(sync, runnable)")
-)
-fun taskRun(plugin: KSpigot, sync: Boolean = true, runnable: () -> Unit) = taskRun(sync, runnable)
-
 
 /**
  * Executes the given [runnable] either
@@ -149,16 +120,10 @@ fun taskRun(sync: Boolean = true, runnable: () -> Unit) {
     }
 }
 
-@Deprecated("Remove the plugin argument", level = DeprecationLevel.ERROR, replaceWith = ReplaceWith("sync(runnable)"))
-fun sync(plugin: KSpigot, runnable: () -> Unit) = sync(runnable)
-
 /**
  * Starts a synchronous task.
  */
 fun sync(runnable: () -> Unit) = Bukkit.getScheduler().runTask(KSpigotPluginManager, runnable)
-
-@Deprecated("Remove the plugin argument", level = DeprecationLevel.ERROR, replaceWith = ReplaceWith("async(runnable)"))
-fun async(plugin: KSpigot, runnable: () -> Unit) = async(runnable)
 
 /**
  * Starts an asynchronous task.
