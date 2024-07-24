@@ -1,29 +1,29 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
 
 val githubRepo = "KitPVP-World/KSpigot"
 
 plugins {
-    kotlin("plugin.serialization") version "1.9.22"
-    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "2.0.0"
+    kotlin("jvm") version "2.0.0"
 
-    `java-library`
     `maven-publish`
     signing
 
     // https://github.com/Kotlin/dokka/releases/latest
-    id("org.jetbrains.dokka") version "1.9.10"
+    id("org.jetbrains.dokka") version "1.9.20"
 
     // https://github.com/johnrengelman/shadow/releases/latest
     id("com.github.johnrengelman.shadow") version "8.1.1" // Using shadow because "java.lang.LinkageError: loader constraint" violation when multiple plugins depend on kotlin
 
     // https://github.com/PaperMC/paperweight/releases/latest
-    id("io.papermc.paperweight.userdev") version "1.5.11"
+    id("io.papermc.paperweight.userdev") version "1.7.1"
 }
 
 group = "world.kitpvp"
-version = "1.20.4+1.9.22"
+version = "1.21+2.0.0"
 description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
 
 repositories {
@@ -33,15 +33,19 @@ repositories {
 
 
 dependencies {
-    paperweight.paperDevBundle("1.20.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
 
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0") // https://github.com/Kotlin/kotlinx.coroutines/releases/latest
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3") // https://github.com/Kotlin/kotlinx.serialization/releases/latest
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.8.0")
-    api("org.jetbrains.kotlin:kotlin-reflect:1.9.22")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC") // https://github.com/Kotlin/kotlinx.coroutines/releases/latest
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1") // https://github.com/Kotlin/kotlinx.serialization/releases/latest
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.9.0-RC")
+    api("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
 
-    api("dev.jorel:commandapi-bukkit-shade:9.3.0") // https://github.com/JorelAli/CommandAPI/releases/latest
-    api("dev.jorel:commandapi-bukkit-kotlin:9.3.0")
+    api("dev.jorel:commandapi-bukkit-shade:9.5.1") // https://github.com/JorelAli/CommandAPI/releases/latest
+    api("dev.jorel:commandapi-bukkit-kotlin:9.5.1")
+}
+
+kotlin {
+    jvmToolchain(21)
 }
 
 tasks {
@@ -56,11 +60,10 @@ tasks {
 
     withType<JavaCompile> {
         options.encoding = "UTF-8"
-        options.release.set(17)
     }
 
     withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
     }
 
     dokkaHtml.configure {
@@ -72,7 +75,7 @@ tasks {
             "name" to project.name,
             "version" to project.version,
             "description" to project.description,
-            "apiVersion" to "1.20"
+            "apiVersion" to "1.21"
         )
         inputs.properties(props)
         filesMatching("paper-plugin.yml") {
@@ -86,8 +89,6 @@ tasks {
 java {
     withSourcesJar()
     withJavadocJar()
-
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
 /*
@@ -99,10 +100,7 @@ publishing {
     repositories {
         maven("https://maven.kitpvp.world/public-snapshots/") {
             name = "ultrabuild-public-snapshots"
-            credentials {
-                username = System.getenv("MVNREPO_UB_USERNAME")
-                password = System.getenv("MVNREPO_UB_PASSWORD")
-            }
+            credentials(PasswordCredentials::class)
         }
     }
 
