@@ -44,6 +44,8 @@ dependencies {
     api("dev.jorel:commandapi-bukkit-kotlin:9.5.1")
 }
 
+paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
+
 kotlin {
     jvmToolchain(21)
 }
@@ -51,7 +53,6 @@ kotlin {
 tasks {
     assemble {
         dependsOn(shadowJar)
-        dependsOn(reobfJar)
     }
 
     named<ShadowJar>("shadowJar") {
