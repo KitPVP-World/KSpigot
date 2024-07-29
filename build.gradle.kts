@@ -40,7 +40,7 @@ dependencies {
     api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.9.0-RC")
     api("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
 
-    api("dev.jorel:commandapi-bukkit-shade:9.5.1") // https://github.com/JorelAli/CommandAPI/releases/latest
+    api("dev.jorel:commandapi-bukkit-shade-mojang-mapped:9.5.1") // https://github.com/JorelAli/CommandAPI/releases/latest
     api("dev.jorel:commandapi-bukkit-kotlin:9.5.1")
 }
 
