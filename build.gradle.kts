@@ -100,7 +100,7 @@ signing {
 publishing {
     repositories {
         maven("https://maven.kitpvp.world/public-snapshots/") {
-            name = "ultrabuild-public-snapshots"
+            name = "ultrabuildRepository"
             credentials(PasswordCredentials::class)
         }
     }
@@ -108,7 +108,6 @@ publishing {
     publications {
         register<MavenPublication>(project.name) {
             from(components["java"])
-            artifact(tasks.jar.get().outputs.files.single())
 
             this.groupId = project.group.toString()
             this.artifactId = project.name.lowercase(Locale.getDefault())
