@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.util.*
@@ -16,14 +15,14 @@ plugins {
     id("org.jetbrains.dokka") version "1.9.20"
 
     // https://github.com/johnrengelman/shadow/releases/latest
-    id("com.github.johnrengelman.shadow") version "8.1.1" // Using shadow because "java.lang.LinkageError: loader constraint" violation when multiple plugins depend on kotlin
+    id("com.gradleup.shadow") version "8.3.0" // Using shadow because "java.lang.LinkageError: loader constraint" violation when multiple plugins depend on kotlin
 
     // https://github.com/PaperMC/paperweight/releases/latest
-    id("io.papermc.paperweight.userdev") version "1.7.1"
+    id("io.papermc.paperweight.userdev") version "1.7.2"
 }
 
 group = "world.kitpvp"
-version = "1.21+2.0.0"
+version = "1.21.1+2.0.0"
 description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
 
 repositories {
@@ -31,17 +30,16 @@ repositories {
     maven("https://repo.codemc.org/repository/maven-public/")
 }
 
-
 dependencies {
-    paperweight.paperDevBundle("1.21-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
 
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC") // https://github.com/Kotlin/kotlinx.coroutines/releases/latest
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC.2") // https://github.com/Kotlin/kotlinx.coroutines/releases/latest
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1") // https://github.com/Kotlin/kotlinx.serialization/releases/latest
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.9.0-RC")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.9.0-RC.2")
     api("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
 
-    api("dev.jorel:commandapi-bukkit-shade-mojang-mapped:9.5.1") // https://github.com/JorelAli/CommandAPI/releases/latest
-    api("dev.jorel:commandapi-bukkit-kotlin:9.5.1")
+    api("dev.jorel:commandapi-bukkit-shade-mojang-mapped:9.5.3") // https://github.com/JorelAli/CommandAPI/releases/latest
+    api("dev.jorel:commandapi-bukkit-kotlin:9.5.3")
 }
 
 paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
@@ -53,10 +51,6 @@ kotlin {
 tasks {
     assemble {
         dependsOn(shadowJar)
-    }
-
-    named<ShadowJar>("shadowJar") {
-        archiveClassifier.set("")
     }
 
     withType<JavaCompile> {
@@ -83,8 +77,6 @@ tasks {
             expand(props)
         }
     }
-
-
 }
 
 java {
@@ -119,7 +111,13 @@ publishing {
 
                 developers {
                     developer {
-                        name.set("jakobkmar")
+                        name = "jakobkmar"
+                    }
+
+                    developer {
+                        name = "notstevy"
+                        email = "notstevy@ultrabuildmc.de"
+                        organization = "kitpvp"
                     }
                 }
 
