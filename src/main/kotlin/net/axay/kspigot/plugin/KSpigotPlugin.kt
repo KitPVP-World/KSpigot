@@ -4,6 +4,8 @@ import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
 import net.axay.kspigot.languageextensions.kotlinextensions.closeIfInitialized
 import net.axay.kspigot.runnables.KRunnableHolder
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.plugin.java.JavaPlugin
 import org.jetbrains.annotations.ApiStatus
 

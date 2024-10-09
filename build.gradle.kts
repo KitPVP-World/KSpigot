@@ -5,8 +5,8 @@ import java.util.*
 val githubRepo = "KitPVP-World/KSpigot"
 
 plugins {
-    kotlin("plugin.serialization") version "2.0.0"
-    kotlin("jvm") version "2.0.0"
+    kotlin("plugin.serialization") version "2.0.20"
+    kotlin("jvm") version "2.0.20"
 
     `maven-publish`
     signing
@@ -15,28 +15,32 @@ plugins {
     id("org.jetbrains.dokka") version "1.9.20"
 
     // https://github.com/johnrengelman/shadow/releases/latest
-    id("com.gradleup.shadow") version "8.3.0" // Using shadow because "java.lang.LinkageError: loader constraint" violation when multiple plugins depend on kotlin
+    id("com.gradleup.shadow") version "8.3.3" // Using shadow because "java.lang.LinkageError: loader constraint" violation when multiple plugins depend on kotlin
 
     // https://github.com/PaperMC/paperweight/releases/latest
-    id("io.papermc.paperweight.userdev") version "1.7.2"
+    id("io.papermc.paperweight.userdev") version "1.7.3"
 }
 
 group = "world.kitpvp"
-version = "1.21.1+2.0.0"
+version = "1.21.1+2.0.20"
 description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
 
 repositories {
     mavenCentral()
+    maven("https://maven.kitpvp.world/public-snapshots/")
     maven("https://repo.codemc.org/repository/maven-public/")
+    maven("https://repo.rapture.pw/repository/maven-releases/")
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
+    paperweight.devBundle("world.kitpvp.kitpvpslime", "1.21.1-R0.1-SNAPSHOT")
 
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0-RC.2") // https://github.com/Kotlin/kotlinx.coroutines/releases/latest
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0") // https://github.com/Kotlin/kotlinx.coroutines/releases/latest
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.9.0")
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1") // https://github.com/Kotlin/kotlinx.serialization/releases/latest
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.9.0-RC.2")
-    api("org.jetbrains.kotlin:kotlin-reflect:2.0.0")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.7.1") // https://github.com/Kotlin/kotlinx.serialization/releases/latest
+    api("org.jetbrains.kotlin:kotlin-reflect:2.0.20")
+    api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1") //https://github.com/Kotlin/kotlinx-datetime/releases/latest
 
     api("dev.jorel:commandapi-bukkit-shade-mojang-mapped:9.5.3") // https://github.com/JorelAli/CommandAPI/releases/latest
     api("dev.jorel:commandapi-bukkit-kotlin:9.5.3")
@@ -46,6 +50,11 @@ paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArt
 
 kotlin {
     jvmToolchain(21)
+
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_21)
+        freeCompilerArgs.add("-Xcontext-receivers")
+    }
 }
 
 tasks {
