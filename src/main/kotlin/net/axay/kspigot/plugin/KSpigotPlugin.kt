@@ -2,18 +2,10 @@ package net.axay.kspigot.plugin
 
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
-import net.axay.kspigot.languageextensions.kotlinextensions.closeIfInitialized
-import net.axay.kspigot.runnables.KRunnableHolder
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 import org.bukkit.plugin.java.JavaPlugin
 import org.jetbrains.annotations.ApiStatus
 
 class KSpigotPlugin: JavaPlugin() {
-
-    // lazy properties
-    private val kRunnableHolderProperty = lazy { KRunnableHolder }
-    internal val kRunnableHolder by kRunnableHolderProperty
 
     override fun onLoad() {
         CommandAPI.onLoad(
@@ -30,9 +22,6 @@ class KSpigotPlugin: JavaPlugin() {
 
     override fun onDisable() {
         CommandAPI.onDisable()
-
-        // avoid unnecessary load of lazy properties
-        kRunnableHolderProperty.closeIfInitialized()
     }
 
     companion object {

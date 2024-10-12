@@ -4,9 +4,7 @@ package net.axay.kspigot.chat.input
 
 import net.axay.kspigot.chat.input.implementations.PlayerInputChat
 import net.axay.kspigot.event.unregister
-import net.axay.kspigot.main.KSpigot
-import net.axay.kspigot.runnables.sync
-import net.axay.kspigot.runnables.taskRunLater
+import net.axay.kspigot.plugin.KSpigotPluginManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.Component.text
 import org.bukkit.entity.Player
@@ -51,10 +49,10 @@ internal abstract class PlayerInput<T>(
     protected abstract val inputListeners: List<Listener>
 
     protected fun onReceive(input: T?) {
-        if (!received) {
-            inputListeners.forEach { it.unregister() }
-            received = true
-            sync {
+        if (!this.received) {
+            this.inputListeners.forEach { it.unregister() }
+            this.received = true
+            KSpigotPluginManager.server.scheduler.scheduleSyncDelayedTask(KSpigotPluginManager) {
                 callback.invoke(PlayerInputResult(input))
             }
         }
@@ -63,9 +61,9 @@ internal abstract class PlayerInput<T>(
     open fun onTimeout() {}
 
     init {
-        taskRunLater(delay = (20 * timeoutSeconds).toLong()) {
-            if (!received) onTimeout()
+        KSpigotPluginManager.server.scheduler.scheduleSyncDelayedTask(KSpigotPluginManager, {
+            if (!this.received) onTimeout()
             onReceive(null)
-        }
+        }, (20 * timeoutSeconds).toLong())
     }
 }
