@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e # Any subsequent(*) commands which fail will cause the shell script to exit immediately
+
 version=$1
 
 if [[ -z "$version" ]]; then
