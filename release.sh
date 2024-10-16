@@ -13,11 +13,11 @@ git fetch
 git checkout "v$version"
 ./gradlew build publish --stacktrace
 
-printf "> \033[0;32mUploading plugins to github release\n"
+printf "> \033[0;32mUploading plugins to github release\033[0mv\n"
 gh release upload "v$version" "kotlin-velocity/build/libs/kotlin-velocity-$version-all.jar" "kotlin-paper/build/libs/kotlin-paper-$version-all.jar"
 
 
-printf "> \033[0;32mCleaning up\n"
+printf "> \033[0;32mCleaning up\033[0mv\n"
 git checkout 1.21
 
 printf "\n"
