@@ -1,149 +1,33 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import java.util.*
-
-val githubRepo = "KitPVP-World/KSpigot"
-
 plugins {
-    kotlin("plugin.serialization") version "2.0.20"
-    kotlin("jvm") version "2.0.20"
-
-    `maven-publish`
-    signing
-
-    // https://github.com/Kotlin/dokka/releases/latest
-    id("org.jetbrains.dokka") version "1.9.20"
-
-    // https://github.com/johnrengelman/shadow/releases/latest
-    id("com.gradleup.shadow") version "8.3.3" // Using shadow because "java.lang.LinkageError: loader constraint" violation when multiple plugins depend on kotlin
-
-    // https://github.com/PaperMC/paperweight/releases/latest
-    id("io.papermc.paperweight.userdev") version "1.7.3"
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.kotlinx.serialization) apply false
+    alias(libs.plugins.kitpvp.gitversioning)
+    alias(libs.plugins.kitpvp.shadow) apply false
+    alias(libs.plugins.kitpvp.project.kotlin) apply false
+    alias(libs.plugins.kitpvp.project.paper) apply false
+    alias(libs.plugins.kitpvp.project.velocity) apply false
+    alias(libs.plugins.kitpvp.publish) apply false
+//    alias(libs.plugins.kitpvp.dokka.single) apply false
 }
 
-group = "world.kitpvp"
-version = "1.21.1+2.0.20"
-description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
-
-repositories {
-    mavenCentral()
-    maven("https://maven.kitpvp.world/public-snapshots/")
-    maven("https://repo.codemc.org/repository/maven-public/")
-    maven("https://repo.rapture.pw/repository/maven-releases/")
+allprojects {
+    group = "world.kitpvp"
+    description = "A Kotlin API for Minecraft plugins using the Paper toolchain"
 }
 
-dependencies {
-    paperweight.devBundle("world.kitpvp.kitpvpslime", "1.21.1-R0.1-SNAPSHOT")
+subprojects {
+    version = rootProject.version
 
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0") // https://github.com/Kotlin/kotlinx.coroutines/releases/latest
-    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:1.9.0")
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1") // https://github.com/Kotlin/kotlinx.serialization/releases/latest
-    api("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.7.1") // https://github.com/Kotlin/kotlinx.serialization/releases/latest
-    api("org.jetbrains.kotlin:kotlin-reflect:2.0.20")
-    api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1") //https://github.com/Kotlin/kotlinx-datetime/releases/latest
+    apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
+    apply(plugin = "com.gradleup.shadow")
 
-    api("dev.jorel:commandapi-bukkit-shade-mojang-mapped:9.5.3") // https://github.com/JorelAli/CommandAPI/releases/latest
-    api("dev.jorel:commandapi-bukkit-kotlin:9.5.3")
-}
+    val authors: List<String> by extra(listOf("jakobkmar", "notstevy"))
 
-paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
-
-kotlin {
-    jvmToolchain(21)
-
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_21)
-        freeCompilerArgs.add("-Xcontext-receivers")
-    }
-}
-
-tasks {
-    assemble {
-        dependsOn(shadowJar)
-    }
-
-    withType<JavaCompile> {
-        options.encoding = "UTF-8"
-    }
-
-    withType<KotlinCompile> {
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_21)
-    }
-
-    dokkaHtml.configure {
-        outputDirectory.set(projectDir.resolve("docs"))
-    }
-    processResources {
-        filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
-        val props = mapOf(
-            "name" to project.name,
-            "version" to project.version,
-            "description" to project.description,
-            "apiVersion" to "1.21"
-        )
-        inputs.properties(props)
-        filesMatching("paper-plugin.yml") {
-            expand(props)
-        }
-    }
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
-
-/*
-signing {
-    sign(publishing.publications)
-}
-*/
-publishing {
-    repositories {
-        maven("https://maven.kitpvp.world/public-snapshots/") {
-            name = "ultrabuildRepository"
-            credentials(PasswordCredentials::class)
-        }
-    }
-
-    publications {
-        register<MavenPublication>(project.name) {
-            from(components["java"])
-
-            this.groupId = project.group.toString()
-            this.artifactId = project.name.lowercase(Locale.getDefault())
-            this.version = project.version.toString()
-
-            pom {
-                name.set(project.name)
-                description.set(project.description)
-
-                developers {
-                    developer {
-                        name = "jakobkmar"
-                    }
-
-                    developer {
-                        name = "notstevy"
-                        email = "notstevy@ultrabuildmc.de"
-                        organization = "kitpvp"
-                    }
-                }
-
-                licenses {
-                    license {
-                        name.set("GNU General Public License, Version 3")
-                        url.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
-                    }
-                }
-
-                url.set("https://github.com/${githubRepo}")
-
-                scm {
-                    connection.set("scm:git:git://github.com/${githubRepo}.git")
-                    url.set("https://github.com/${githubRepo}/tree/main")
-                }
-            }
-        }
-    }
+//
+//    tasks {
+//        dokkaHtml.configure {
+//            outputDirectory.set(projectDir.resolve("docs"))
+//        }
+//    }
 }

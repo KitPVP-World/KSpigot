@@ -7,7 +7,6 @@ import org.bukkit.event.Event
 import org.bukkit.event.EventPriority
 import org.bukkit.event.HandlerList
 import org.bukkit.event.Listener
-import org.bukkit.plugin.Plugin
 
 /**
  * Shortcut for unregistering all events in this listener.
