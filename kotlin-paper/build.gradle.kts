@@ -24,3 +24,18 @@ dependencies {
     api("org.jetbrains.kotlin:kotlin-reflect:${libs.versions.kotlin.get()}")
     api(libs.kotlinx.datetime)
 }
+
+publishing {
+    repositories {
+        maven("https://maven.kitpvp.world/public-snapshots/") {
+            name = "ultrabuildRepository"
+            credentials(PasswordCredentials::class)
+        }
+    }
+}
+
+tasks {
+    shadowJar {
+        configurations = listOf(project.configurations.runtimeClasspath.get())
+    }
+}

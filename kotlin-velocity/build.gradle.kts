@@ -16,3 +16,9 @@ dependencies {
     api("org.jetbrains.kotlin:kotlin-reflect:${libs.versions.kotlin.get()}")
     api(libs.kotlinx.datetime)
 }
+
+tasks {
+    shadowJar {
+        configurations = listOf(project.configurations.runtimeClasspath.get())
+    }
+}
