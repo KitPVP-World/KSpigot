@@ -28,7 +28,7 @@ dependencies {
 publishing {
     repositories {
         maven("https://maven.kitpvp.world/public-snapshots/") {
-            name = "ultrabuildRepository"
+            name = "kitpvpWorldRepository"
             credentials(PasswordCredentials::class)
         }
     }

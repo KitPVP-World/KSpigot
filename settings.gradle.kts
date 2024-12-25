@@ -2,7 +2,7 @@ pluginManagement {
     repositories {
         gradlePluginPortal()
         maven("https://maven.kitpvp.world/snapshots/") {
-            name = "ultrabuildRepository"
+            name = "kitpvpWorldRepository"
             credentials(PasswordCredentials::class)
         }
         maven("https://oss.sonatype.org/content/repositories/snapshots/")
@@ -17,14 +17,14 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         maven("https://maven.kitpvp.world/public-releases/") {
-            name = "ultrabuildRepository"
+            name = "kitpvpWorldRepository"
             credentials(PasswordCredentials::class)
         }
     }
 
     versionCatalogs {
         create("libs") {
-            from("world.kitpvp:version-cataloge:1.4-alpha.13")
+            from("world.kitpvp:version-cataloge:1.4-alpha.30")
         }
     }
 }
