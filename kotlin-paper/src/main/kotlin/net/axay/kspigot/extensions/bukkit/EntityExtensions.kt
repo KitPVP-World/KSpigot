@@ -12,7 +12,6 @@ import org.bukkit.Material
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.*
 import org.bukkit.inventory.EquipmentSlot
-import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import java.time.Duration
 
@@ -55,7 +54,7 @@ val Entity.isStandingInMidAir: Boolean
  * @throws NullPointerException if the entity doesn't have a max health value
  */
 val LivingEntity.realMaxHealth: Double
-    get() = getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value
+    get() = getAttribute(Attribute.MAX_HEALTH)?.value
         ?: throw NullPointerException("The entity does not have a max health value!")
 
 /**
@@ -70,7 +69,7 @@ fun Damageable.kill() {
  * @throws NullPointerException if the entity does not have a max health value
  */
 fun LivingEntity.heal() {
-    health = getAttribute(Attribute.GENERIC_MAX_HEALTH)?.value
+    health = getAttribute(Attribute.MAX_HEALTH)?.value
         ?: throw NullPointerException("The entity does not have a max health value!")
 }
 
@@ -172,12 +171,6 @@ fun Player.getHandItem(hand: EquipmentSlot?) = when (hand) {
 fun Player.actionBar(text: String) {
     sendActionBar(literalText { legacyText(text) })
 }
-
-/**
- * Adds the given ItemStacks to the player's inventory.
- * @return The items that did not fit into the player's inventory.
- */
-fun Player.give(vararg itemStacks: ItemStack) = inventory.addItem(*itemStacks)
 
 /**
  * Adds all equipment locks to every equipment slot

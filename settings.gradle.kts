@@ -24,7 +24,7 @@ dependencyResolutionManagement {
 
     versionCatalogs {
         create("libs") {
-            from("world.kitpvp:version-cataloge:1.4-alpha.34")
+            from("world.kitpvp:version-cataloge:1.5.0")
         }
     }
 }
