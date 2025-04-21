@@ -8,13 +8,16 @@ import org.jetbrains.annotations.ApiStatus
 class KSpigotPlugin: JavaPlugin() {
 
     override fun onLoad() {
-        CommandAPI.onLoad(
-            CommandAPIBukkitConfig(this)
-                .silentLogs(false)
+        val config = CommandAPIBukkitConfig(this)
+            .setNamespace("kitpvp")
+            .shouldHookPaperReload(true)
+
+        if(System.getProperty("core.commandapi.debug") != null)
+            config
                 .verboseOutput(true)
-                .setNamespace("kitpvp")
-                .shouldHookPaperReload(true)
-        )
+                .silentLogs(false)
+
+        CommandAPI.onLoad(config)
     }
 
     override fun onEnable() {
