@@ -12,6 +12,7 @@ class KSpigotPlugin: JavaPlugin() {
             CommandAPIBukkitConfig(this)
                 .silentLogs(false)
                 .verboseOutput(true)
+                .setNamespace("kitpvp")
                 .shouldHookPaperReload(true)
         )
     }
