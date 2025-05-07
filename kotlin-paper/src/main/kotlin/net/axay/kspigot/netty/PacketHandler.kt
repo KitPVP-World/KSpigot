@@ -40,18 +40,18 @@ object PacketHandler {
 
         val channel = player.nms.connection.connection.channel
         channel.pipeline()
-            .addLast("core_packets", listener)
+            .addLast("kotlin-paper", listener)
         this.listeners[player.uniqueId] = listener
     }
 
     internal fun uninject(player: Player) {
         val channel = player.nms.connection.connection.channel
         channel.pipeline()
-            .remove("core_packets")
+            .remove("kotlin-paper")
         this.listeners.remove(player.uniqueId)
     }
 
-    fun <T : Packet<ClientGamePacketListener>> register(packetClass: Class<T>, block: (PacketEvent<T>) -> Unit) {
+    fun <T : Packet<*>> register(packetClass: Class<T>, block: (PacketEvent<T>) -> Unit) {
         this.customPacketListeners.getOrPut(packetClass) { HashSet() }
             .add { event -> block(event as PacketEvent<T>) }
     }
@@ -59,11 +59,14 @@ object PacketHandler {
 
 /**
  * Creates a listener for a specific packet.
- * The function gets called when the packet is sent to the player's connection
+ * The function gets called when the packet is sent/or received from the player's connection
+ * For sent packets see [ClientGamePacketListener]
+ * For received packets see [ServerGame]
+ *
  * @param block function to get executed
  */
 @Suppress("UNCHECKED_CAST")
-inline fun <reified T : Packet<ClientGamePacketListener>> packetEvent(noinline block: (PacketEvent<T>) -> Unit) =
+inline fun <reified T : Packet<*>> packetEvent(noinline block: (PacketEvent<T>) -> Unit) =
     PacketHandler.register(T::class.java, block)
 
 /**
