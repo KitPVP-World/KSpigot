@@ -2,6 +2,7 @@ package net.axay.kspigot.plugin
 
 import dev.jorel.commandapi.CommandAPI
 import dev.jorel.commandapi.CommandAPIBukkitConfig
+import net.axay.kspigot.netty.PacketHandler
 import org.bukkit.plugin.java.JavaPlugin
 import org.jetbrains.annotations.ApiStatus
 
@@ -22,10 +23,12 @@ class KSpigotPlugin: JavaPlugin() {
 
     override fun onEnable() {
         CommandAPI.onEnable()
+        PacketHandler.register()
     }
 
     override fun onDisable() {
         CommandAPI.onDisable()
+        PacketHandler.unregister(this.server)
     }
 
     companion object {
