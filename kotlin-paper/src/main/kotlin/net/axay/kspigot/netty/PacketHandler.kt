@@ -1,6 +1,7 @@
 package net.axay.kspigot.netty
 
 import net.axay.kspigot.event.listen
+import net.axay.kspigot.extensions.console
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBundlePacket
@@ -9,12 +10,8 @@ import org.bukkit.craftbukkit.entity.CraftPlayer
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
-import java.util.UUID
-import java.util.concurrent.ConcurrentHashMap
 
 object PacketHandler {
-
-    internal val listeners = ConcurrentHashMap<UUID, PacketListener>()
     internal val customPacketListeners = HashMap<Class<out Packet<*>>, HashSet<(PacketEvent<*>) -> Unit>>()
 
     private val Player.nms get() = (this as CraftPlayer).handle
@@ -36,19 +33,21 @@ object PacketHandler {
     }
 
     internal fun inject(player: Player) {
-        val listener = PacketListener(player)
-
         val channel = player.nms.connection.connection.channel
+
         channel.pipeline()
-            .addLast("kotlin-paper", listener)
-        this.listeners[player.uniqueId] = listener
+            .addAfter("encoder", "kotlin-paper-encoder", PacketEncoderListener(player))
+            .addAfter("decoder", "kotlin-paper-decoder", PacketDecoderListener(player))
+
+        console.sendRichMessage(channel.pipeline().names().joinToString("\n") { " - $it: ${channel.pipeline()[it]}" })
     }
 
     internal fun uninject(player: Player) {
         val channel = player.nms.connection.connection.channel
-        channel.pipeline()
-            .remove("kotlin-paper")
-        this.listeners.remove(player.uniqueId)
+        if(channel.pipeline().get("kotlin-paper-encoder") != null)
+            channel.pipeline().remove("kotlin-paper-encoder")
+        if(channel.pipeline().get("kotlin-paper-decoder") != null)
+            channel.pipeline().remove("kotlin-paper-decoder")
     }
 
     fun <T : Packet<*>> register(packetClass: Class<T>, block: (PacketEvent<T>) -> Unit) {
@@ -61,7 +60,7 @@ object PacketHandler {
  * Creates a listener for a specific packet.
  * The function gets called when the packet is sent/or received from the player's connection
  * For sent packets see [ClientGamePacketListener]
- * For received packets see [ServerGame]
+ * For received packets see [net.minecraft.network.protocol.game.ServerGamePacketListener]
  *
  * @param block function to get executed
  */
@@ -74,8 +73,8 @@ inline fun <reified T : Packet<*>> packetEvent(noinline block: (PacketEvent<T>) 
  * @param packet packet to send
  */
 fun Player.sendPacketSilently(packet: Packet<ClientGamePacketListener>) {
-    val pipeline = (this as CraftPlayer).handle.connection.connection.channel.pipeline()
-    pipeline.write(ProtectedPacket(packet))
+    val connection = (this as CraftPlayer).handle.connection
+    connection.send(ProtectedPacket(packet))
 }
 
 /**
