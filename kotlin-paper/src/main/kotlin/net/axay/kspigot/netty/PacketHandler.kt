@@ -1,7 +1,6 @@
 package net.axay.kspigot.netty
 
 import net.axay.kspigot.event.listen
-import net.axay.kspigot.extensions.console
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.game.ClientGamePacketListener
 import net.minecraft.network.protocol.game.ClientboundBundlePacket
@@ -38,8 +37,6 @@ object PacketHandler {
         channel.pipeline()
             .addAfter("encoder", "kotlin-paper-encoder", PacketEncoderListener(player))
             .addAfter("decoder", "kotlin-paper-decoder", PacketDecoderListener(player))
-
-        console.sendRichMessage(channel.pipeline().names().joinToString("\n") { " - $it: ${channel.pipeline()[it]}" })
     }
 
     internal fun uninject(player: Player) {

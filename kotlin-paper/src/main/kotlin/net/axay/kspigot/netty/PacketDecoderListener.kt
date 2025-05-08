@@ -20,7 +20,6 @@ class PacketDecoderListener(
             super.channelRead(ctx, msg)
             return
         }
-        println("Class: ${clazz.simpleName}")
 
         val event = PacketEvent(msg, player, ctx)
         listeners.forEach { it(event) }
