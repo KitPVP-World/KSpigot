@@ -26,7 +26,7 @@ class PacketDecoderListener(
         if (event.cancelled)
             return
 
-        super.channelRead(ctx, msg)
+        super.channelRead(ctx, event.packet)
     }
 }
 

@@ -28,6 +28,6 @@ class PacketEncoderListener(private val player: Player) : ChannelOutboundHandler
         listeners.forEach { it(event) }
         if (event.cancelled)
             return
-        super.write(ctx, msg, promise)
+        super.write(ctx, event.packet, promise)
     }
 }
