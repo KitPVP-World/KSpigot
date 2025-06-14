@@ -35,15 +35,15 @@ object PacketHandler {
         val channel = player.nms.connection.connection.channel
 
         channel.pipeline()
-            .addAfter("encoder", "kotlin-paper-encoder", PacketEncoderListener(player))
+            .addAfter("unbundler", "kotlin-paper-encoder", PacketEncoderListener(player))
             .addAfter("decoder", "kotlin-paper-decoder", PacketDecoderListener(player))
     }
 
     internal fun uninject(player: Player) {
         val channel = player.nms.connection.connection.channel
-        if(channel.pipeline().get("kotlin-paper-encoder") != null)
+        if (channel.pipeline().get("kotlin-paper-encoder") != null)
             channel.pipeline().remove("kotlin-paper-encoder")
-        if(channel.pipeline().get("kotlin-paper-decoder") != null)
+        if (channel.pipeline().get("kotlin-paper-decoder") != null)
             channel.pipeline().remove("kotlin-paper-decoder")
     }
 
