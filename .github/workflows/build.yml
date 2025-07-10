@@ -34,7 +34,7 @@ jobs:
       - name: Setup Gradle
         uses: useblacksmith/setup-gradle/setup-gradle@v5
         with:
-          gradle-version: 8.12
+          gradle-version: 8.14.3
       - name: Build with Gradle
         run: gradle build publish --stacktrace -PkitpvpWorldRepositoryUsername="${{ secrets.MVNREPO_USERNAME }}"  -PkitpvpWorldRepositoryPassword="${{ secrets.MVNREPO_PASSWORD }}" --no-daemon
 
