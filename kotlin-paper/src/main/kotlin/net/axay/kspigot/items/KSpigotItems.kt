@@ -130,22 +130,6 @@ var ItemMeta.name: Component?
     set(value) = displayName(value ?: Component.space())
 
 /**
- * Provides safe access to the items' displayName.
- */
-@Suppress("DEPRECATION")
-@Deprecated("displaynames are saved as Components in Paper", ReplaceWith("name", "net.axay.kspigot.Items.name"))
-var ItemMeta.stringName: String?
-    get() = if (hasDisplayName()) displayName else null
-    set(value) = setDisplayName(if (value == null || value == "") " " else value)
-
-/**
- * Provides safe access to the items' customModelData.
- */
-var ItemMeta.customModel: Int?
-    get() = if (hasCustomModelData()) customModelData else null
-    set(value) = setCustomModelData(value)
-
-/**
  * Provides more consistent access to the items' localizedName.
  */
 var ItemMeta.localName: TranslatableComponent

@@ -10,7 +10,13 @@ import net.kyori.adventure.title.Title
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.attribute.Attribute
-import org.bukkit.entity.*
+import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Damageable
+import org.bukkit.entity.Entity
+import org.bukkit.entity.EntityType
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
+import org.bukkit.event.entity.CreatureSpawnEvent
 import org.bukkit.inventory.EquipmentSlot
 import org.bukkit.plugin.Plugin
 import java.time.Duration
@@ -132,10 +138,9 @@ fun Player.showOnlinePlayers(plugin: Plugin) {
 @NMS_General
 fun Location.spawnCleanEntity(entityType: EntityType): Entity? {
     val craftWorld = world as? org.bukkit.craftbukkit.CraftWorld ?: return null
-    return craftWorld.makeEntity(this, entityType.entityClass!!)?.let {
-        craftWorld.handle.addFreshEntity(it)
-        return@let it.bukkitEntity
-    }
+    return craftWorld.createEntity(this, entityType.entityClass!!, false).also {
+        craftWorld.addEntityToWorld(it, CreatureSpawnEvent.SpawnReason.CUSTOM)
+    }.bukkitEntity
 }
 
 /**

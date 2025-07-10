@@ -62,7 +62,7 @@ data class StructureDataEntity(
 
     @Suppress("DEPRECATION")
     override fun createAt(loc: Location) {
-        (loc.spawnCleanEntity(entityType) as CraftEntity).handle.load(nbtData)
+        (loc.spawnCleanEntity(entityType) as CraftEntity).nbtData = this.nbtData
     }
 }
 
@@ -70,6 +70,6 @@ data class StructureDataParticle(
     val particle: KSpigotParticle,
 ) : StructureData {
     override fun createAt(loc: Location) {
-        particle.spawnAt(loc)
+        this.particle.spawnAt(loc)
     }
 }

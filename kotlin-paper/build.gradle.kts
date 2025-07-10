@@ -10,8 +10,8 @@ paperPluginYaml {
 }
 
 dependencies {
-    api("dev.jorel:commandapi-bukkit-shade-mojang-mapped:10.0.0") // https://github.com/JorelAli/CommandAPI/releases/latest
-    api("dev.jorel:commandapi-bukkit-kotlin:10.0.0")
+    api(libs.commandapi.bukkit.shade)
+    api(libs.commandapi.bukkit.kotlin)
 
     api(libs.kotlinx.coroutines)
     api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:${libs.versions.kotlinx.coroutines.get()}")

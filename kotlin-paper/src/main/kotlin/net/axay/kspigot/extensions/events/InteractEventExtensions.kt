@@ -3,7 +3,6 @@ package net.axay.kspigot.extensions.events
 import net.axay.kspigot.annotations.UnsafeImplementation
 import org.bukkit.block.Block
 import org.bukkit.entity.Entity
-import org.bukkit.entity.Player
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -17,11 +16,10 @@ import org.bukkit.inventory.ItemStack
  */
 val PlayerInteractEntityEvent.interactItem: ItemStack?
     get() {
-        val p: Player = this.player
         return when (this.hand) {
-            EquipmentSlot.HAND -> p.inventory.itemInMainHand
-            EquipmentSlot.OFF_HAND -> p.inventory.itemInOffHand
-            EquipmentSlot.CHEST, EquipmentSlot.FEET, EquipmentSlot.HEAD, EquipmentSlot.LEGS, EquipmentSlot.BODY -> null
+            EquipmentSlot.HAND -> this.player.inventory.itemInMainHand
+            EquipmentSlot.OFF_HAND -> this.player.inventory.itemInOffHand
+            EquipmentSlot.CHEST, EquipmentSlot.FEET, EquipmentSlot.HEAD, EquipmentSlot.LEGS, EquipmentSlot.BODY, EquipmentSlot.SADDLE -> null
         }
     }
 
@@ -40,12 +38,11 @@ val PlayerInteractEvent.clickedBlockExceptAir: Block?
     get() {
         return clickedBlock ?: kotlin.run {
             return@run if (this.action == Action.RIGHT_CLICK_AIR) {
-                val p: Player = this.player
                 // check for sight blocking entities
-                for (nearbyEntity: Entity in p.getNearbyEntities(5.0, 5.0, 5.0))
-                    if (p.hasLineOfSight(nearbyEntity)) return@run null
+                for (nearbyEntity: Entity in this.player.getNearbyEntities(5.0, 5.0, 5.0))
+                    if (this.player.hasLineOfSight(nearbyEntity)) return@run null
                 // get first block in line of sight which is not air
-                p.getLineOfSight(null, 5).find { block -> !block.type.isAir }
+                this.player.getLineOfSight(null, 5).find { block -> !block.type.isAir }
             } else null
         }
     }

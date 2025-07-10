@@ -5,7 +5,7 @@ package net.axay.kspigot.utils
 import net.axay.kspigot.event.listen
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerQuitEvent
-import java.util.*
+import java.util.UUID
 
 class PlayerMapHolder {
     internal val maps = HashSet<OnlinePlayerMap<*>>()
@@ -23,7 +23,7 @@ class PlayerMapHolder {
 
 /**
  * A map where entries will be removed
- * atomatically when a player leaves the server.
+ * automatically when a player leaves the server.
  */
 class OnlinePlayerMap<V>(val playerMapHolder: PlayerMapHolder) {
     val internalMap = HashMap<UUID, V>()

@@ -9,6 +9,9 @@ velocityPluginJson {
 }
 
 dependencies {
+    api(libs.commandapi.velocity.shade)
+    api(libs.commandapi.velocity.kotlin)
+
     api(libs.kotlinx.coroutines)
     api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk9:${libs.versions.kotlinx.coroutines.get()}")
     api(libs.kotlinx.serialization.json)
