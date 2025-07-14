@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
 /**
  * An event that listens for packets sent to the [player]
  */
-class PacketEvent<T : Packet<*>>(
+data class PacketEvent<T : Packet<*>>(
     var packet: T,
     val player: Player,
     val ctx: ChannelHandlerContext,
