@@ -35,7 +35,7 @@ object PacketHandler {
         val channel = player.nms.connection.connection.channel
 
         channel.pipeline()
-            .addAfter("unbundler", "kotlin-paper-encoder", PacketEncoderListener(player))
+            .addAfter("encoder", "kotlin-paper-encoder", PacketEncoderListener(player))
             .addAfter("decoder", "kotlin-paper-decoder", PacketDecoderListener(player))
     }
 
